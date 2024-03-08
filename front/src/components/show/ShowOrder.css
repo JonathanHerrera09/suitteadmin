@@ -1,0 +1,66 @@
+/* Estilos para el contenedor de la tabla */
+.table-container {
+    margin: 50px;
+  }
+  .titleC {
+    margin: 0px;
+    font-size: 50px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  }
+  /* Estilos para la tabla */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  
+  /* Estilos para las celdas de la tabla */
+  .table th,
+  .table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Estilos para la fila de encabezado */
+  .table thead th {
+    background-color: #343a40;
+    color: white;
+    font-weight: bold;
+  }
+  
+  /* Estilos para las filas impares */
+  .table tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+  }
+  
+  /* Estilos para los botones de acción */
+  .btn {
+    padding: 6px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .btn:hover {
+    opacity: 0.8;
+  }
+  .fa-pencil-alt {
+    color: #ff6811;
+  }
+  .fa-trash-alt {
+    color: #ff6811;
+  }
+  .fa-eye{
+    color: #ff6811;
+  }

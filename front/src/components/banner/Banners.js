@@ -50,7 +50,6 @@ const Banners = () => {
     return (
         <div>
             <h1>Forma de entrega</h1>
-            
             <div className="table-container">  
                 <Link to={`${kitchenLink}/bannerC/`} className="btn btn-secondary btn-custom-width">
                     CREAR BANNER

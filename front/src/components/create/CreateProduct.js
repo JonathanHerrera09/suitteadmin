@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Navbar from '../navbar/navbar';
 import React, { useEffect, useState } from 'react';
+import { Modal } from 'bootstrap';
 import './CreateO.css'
 import {useNavigate, useLocation} from 'react-router-dom';
 import {socket} from '../../socket/socket';
@@ -27,8 +28,10 @@ const CreateProduct = () => {
         withCredentials: true
     };
     
-    const [description, setDescription]= useState('')
+    const [description, setDescription]= useState('');
+    const [numbercart, setNumberCart] = useState(0);
     const [tipoServicio, setTipoServicio] = useState([]);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [products, setProducts] = useState([]);
     const [selectedTipoServicio, setSelectedTipoServicio] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
@@ -59,6 +62,7 @@ const CreateProduct = () => {
         setSelectedProducts(prevSelectedProducts => {
             const updatedProducts = [...prevSelectedProducts, product];
             setTotalPrice(updatedProducts.reduce((acc, producto) => acc + producto.price, 0));
+            setNumberCart(updatedProducts.length);
             setDisplayStyle('block');
             return updatedProducts;
         });
@@ -106,15 +110,13 @@ const CreateProduct = () => {
         setSearchResults(results);
         
     }, [searchTerm, products]);
-
-    useEffect(() => {
-        // socket.on('product', (data) => {
-        //     setProducts(data);
-        // });
-        return () => {
-            // socket.off('product');
-        };
-    }, []);
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+    const openModal = () => {
+        const myModal = new Modal(document.getElementById('checkmodal'));
+        myModal.show();
+    };
     return (
         
         <div>
@@ -151,50 +153,48 @@ const CreateProduct = () => {
                             placeholder="Buscar producto..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className='form-control'
-                        />
+                            className='form-control'/>
                         <div className='resultados-busqueda'>
-                            <div className="container text-center">
-                                <div className='d-flex flex-wrap'>
-                                    {searchResults.map(product => (
-                                        <div className='col-3' key={product.id} onClick={() => handleProductClick(product)}>
-                                            <img src={`${endpoint2}${product.img}`} alt={product.name} />
-                                            <p>{product.name}</p>
-                                            <p>{product.price}</p>
-                                        </div>
-                                    ))}
+                            <div className='content-wrap'>
+                                <div className="shop row grid-container gutter-20 has-init-isotope">
+                                    <div className='d-flex flex-wrap'>
+                                        {searchResults.map(product => (
+                                            <div className='col-6 col-md-3 col-sm-6' key={product.id} onClick={() => handleProductClick(product)}>
+                                                <img className="imgbrd" src={`${endpoint2}${product.img}`} alt={product.name} />
+                                                <p>{product.name}</p>
+                                                <p>{product.price}</p>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {/* <div className='mb-3 saveb'>
-                        <label className='form-label'>Cantidad</label>
-                        <input  
-                            value={stock}
-                            onChange={ (e) => setStock(e.target.value)}
-                            type='number'
-                            className='form-control'
-                        />
-                    </div> */}
-                    <div className='prodCot' style={{ display: displayStyle }}>
-                        <div className='centerItems'>
-                            <div className="imgContainer">
+                    <div className="cart-icon" onClick={toggleSidebar}>
+                        <i className="fas fa-truck"></i>
+                        <span className="top-cart-number">{numbercart}</span>
+                    </div>
+                    {isSidebarOpen && (
+                        <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+                            <div className="sidebar-footer imgContainer">
                                 {selectedProducts.map((product, index) => (
-                                    <div className='col-2' key={index}>                                
-                                        <img src={`${endpoint2}${product.img}`} alt={product.name} />
-                                        <p>{product.name}</p>
-                                        <p>{product.price}</p>
-                                        <input type="number" min="1" name="cant" value={product.quantity} onChange={(e) => handleQuantityChange(index, e)}></input>
-                                        <button type="button" onClick={() => handleRemoveProduct(index, product.price)}>X</button>
+                                    <div className="sidebar-footer">
+                                        <div className='col-2' key={index}>
+                                            <img src={`${endpoint2}${product.img}`} alt={product.name}/>
+                                            <p>{product.name}</p>
+                                            <p>{product.price}</p>
+                                            <input type="number" min="1" name="cant" value={product.quantity} onChange={(e) => handleQuantityChange(index, e)}></input>
+                                            <button type="button" onClick={() => handleRemoveProduct(index, product.price)}>X</button>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
-                            <div className="allBtn" style={{ maxWidth: '20%' }}>
-                            <h4>Total: {totalPrice.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}   </h4>
-                                <button type='submit' className='btn btn-primary'>Guardar</button>
+                            <div className="sidebar-footer-logout">
+                                <h4>Total: {totalPrice.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}   </h4>                    
                             </div>
+                            <button type='submit' className='btn btn-secondary' onClick={openModal} >Confirmar orden</button>
                         </div>
-                    </div>
+                    )}
                 </form>                
             </div>
             <Navbar/>

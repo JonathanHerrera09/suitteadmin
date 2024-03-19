@@ -33,12 +33,12 @@
     overflow-x: auto;
     display: flex; /* Cambiar el flujo de diseño a flexbox */
 }
-
-.imgContainer img {
-    width: 50px; /* Tamaño fijo de las imágenes */
-    height: auto; /* Mantener la proporción de aspecto */
-    margin-right: 10px; /* Espacio entre las imágenes */
+.imgbrd{
+    max-width: 90%;
+    height: 150px;
+    border-radius:50px;
 }
+
 
 /* Estilos para la barra de desplazamiento */
 .imgContainer::-webkit-scrollbar {
@@ -75,5 +75,12 @@
     background-color: transparent;
     border-color: white;
 }
-
-
+.sidebar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 92%;
+    z-index: 9999; /* Ajusta el z-index según sea necesario para asegurarte de que esté por encima de otros elementos */
+    background-color: rgba(255, 255, 255, 0.9); /* Color de fondo semitransparente */
+    overflow-y: auto;
+}

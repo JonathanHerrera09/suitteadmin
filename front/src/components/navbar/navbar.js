@@ -47,7 +47,9 @@ const Navbar = () => {
 
   return (    
     <>
+    
       <nav className={`navbar ${isNavbarFixed ? 'fixed-bottom' : ''}`}>
+      <div className="overflow-auto">
         <div className="navbar-menu">
           <div className="navbar-start">
             <a className="navbar-item" href={`${kitchenLink}`}>
@@ -66,7 +68,7 @@ const Navbar = () => {
               <i className="fas fa-cog"></i> Configuración
             </a>
           </div>
-        </div>
+        </div></div>
       </nav>
       {isSidebarOpen && (
         <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>

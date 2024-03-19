@@ -1,15 +1,17 @@
-.prodCotSale {
-    margin-top: 100px;
-    background-color: #ff6811;
-    color: white;
-   
-    justify-content: space-between;
-    padding: 40px !important;
-    bottom: 40px;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 999 !important;
-    position: fixed !important;   
+
+@media only screen and (min-width: 768px) {
+  .categoryre {
+    justify-content: center;
+  }
+}
+.categoryre{
+  display: flex;
+  margin-top: 50px;
+}
+.imgbrd{
+  max-width: 90%;
+  height: 150px;
+  border-radius:50px;
 }
 .cart-icon{
     position: fixed;

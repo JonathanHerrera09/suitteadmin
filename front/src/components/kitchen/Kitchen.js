@@ -5,7 +5,7 @@ import { socket } from '../../socket/socket';
 import { Modal, Button } from 'react-bootstrap';
 import {Link, useLocation} from 'react-router-dom'
 import coinSound from '../../assets/audio/coin-sound.mp3';
-
+import "./kitchen.css";
 const endpoint = 'http://localhost:8000/api';
 
 const audio = new Audio(coinSound);
@@ -81,9 +81,9 @@ const Kitchen = () => {
     };
     const calculateCompletion = (order) => {
         const products = JSON.parse(order.products);
-    const totalItems = products.length;
-    const completedItems = products.filter(product => product.priority === 2).length; // Filtra los productos con priority 2
-    return (completedItems / totalItems) * 100;
+        const totalItems = products.length;
+        const completedItems = products.filter(product => product.priority === 2).length; // Filtra los productos con priority 2
+        return (completedItems / totalItems) * 100;
     };
     const getCardColor = (completion) => {
         if (completion === 0) {
@@ -118,7 +118,6 @@ const Kitchen = () => {
                                 <div className="card-body">
                                     <h5 className="card-title">{order.type_service_name}</h5>
                                     <p className="card-text">Total Products: {JSON.parse(order.products).length}</p>
-                                    <p className="card-text">Completed: {JSON.parse(order.products).filter(product => product.completed).length}</p>
                                     <p className="card-text">Completion: {calculateCompletion(order).toFixed(2)}%</p>
                                 </div>                        
                             </div>

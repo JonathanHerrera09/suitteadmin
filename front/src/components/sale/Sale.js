@@ -77,6 +77,7 @@ const Sale = () => {
             setNumberCart(updatedProducts.length);
             setDisplayStyle('block');
             setShowCart(true);
+            setIsSidebarOpen(!isSidebarOpen);
             return updatedProducts;
         });
     };
@@ -107,14 +108,14 @@ const Sale = () => {
     };
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
-      };
+    };
     return (
-        <div>
+        <div className='container1'>
             <div id="carouselExample" className="carousel slide" data-bs-ride="carousel">
                 <div className="carousel-inner">
                     {banners.map((banner, index) => (
                         <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                            <img src={`${endpoint2}banners/${banner.img}`} className="d-block w-100" alt={banner.name} />
+                            <img src={`${endpoint2}banners/${banner.img}`} className="d-block w-100 img-fluid" alt={banner.name} />
                         </div>
                     ))}
                 </div>
@@ -127,120 +128,128 @@ const Sale = () => {
                     <span className="visually-hidden">Next</span>
                 </button>
             </div>
-            <div className='ss' style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
-                {categorys.map((category, index) => (
-                    <div key={index} style={{ textAlign: 'center', margin: '0 20px' }}>
-                        <img src={`${endpoint2}categorys/${category.img}`} className="rounded-circle" alt="..." style={{ width: '100px', height: '100px', objectFit: 'cover' }} onClick={() => handleCategoryClick(category)} />
-                        <h3>{category.name}</h3>
-                    </div>
-                ))}
-            </div>
-            <div className="products-container" style={{ marginTop: '50px' }}>
-                <h2>{productsAll}</h2>
-                <br/>
-                <div className='d-flex flex-wrap'>
-                    {selectedCategory === null ? 
-                        products.map((product, index) => (
-                            <div className='col-6 col-md-3' key={index} onClick={() => handleProductClick(product)}>
-                                <img src={`${endpoint2}${product.img}`} alt={product.name} />
-                                <h3>{product.name}</h3>
-                                <p>{product.description}</p>
-                                <p>{product.price}</p>
-                            </div>
-                        )) :
-                        products.filter(product => parseInt(product.category) === selectedCategory).map((product, index) => (
-                            <div className='col-6 col-md-3' key={index} onClick={() => handleProductClick(product)}>
-                                <img src={`${endpoint2}${product.img}`} alt={product.name} />
-                                <h3>{product.name}</h3>
-                                <p>{product.description}</p>
-                                <p>{product.price}</p>
-                            </div>
-                        ))
-                    }
-                </div>
-                
-            </div>
-            <div className="cart-icon" onClick={toggleSidebar}>
-                <i className="fas fa-truck"></i>
-                <span className="top-cart-number">{numbercart}</span>
-            </div>
-            {isSidebarOpen && (
-                <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-                    <div className="sidebar-footer imgContainer">
-                        {selectedProducts.map((product, index) => (
-                            <div className="sidebar-footer">
-                                <div className='col-2' key={index}>
-                                    <img src={`${endpoint2}${product.img}`} alt={product.name}/>
-                                    <p>{product.name}</p>
-                                    <p>{product.price}</p>
-                                    <input type="number" min="1" name="cant" value={product.quantity} onChange={(e) => handleQuantityChange(index, e)}></input>
-                                    <button type="button" onClick={() => handleRemoveProduct(index, product.price)}>X</button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="sidebar-footer-logout">
-                        <h4>Total: {totalPrice.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}   </h4>                    
-                    </div>
-                    <button type='submit' className='btn btn-secondary' onClick={openModal} >Confirmar orden</button>
-                </div>
-            )}
-            <div className="modal fade" id="checkmodal" aria-labelledby="ModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h1 className="modal-title fs-5" id="ModalLabel">Información adicional</h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div className="overflow-auto">
+                <div className='categoryre'>
+                    {categorys.map((category, index) => (
+                        <div key={index} style={{ textAlign: 'center', margin: '0 20px' }}>
+                            <img src={`${endpoint2}categorys/${category.img}`} className="rounded-circle" alt="..." style={{ width: '100px', height: '100px', objectFit: 'cover' }} onClick={() => handleCategoryClick(category)} />
+                            <h3>{category.name}</h3>
                         </div>
-                        <div className="modal-body">
-                            <form onSubmit={store}>
-                                <div className="row">
-                                    <div className="col-6 mb-3">
-                                        <label htmlFor="fullName" className="form-label">Nombre completo</label>
-                                        <input type="text" className="form-control" id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-                                    </div>
-                                    <div className="col-6 mb-3">
-                                        <label htmlFor="phoneNumber" className="form-label">Teléfono - WhatsApp</label>
-                                        <input type="tel" className="form-control" id="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-6 mb-3">
-                                        <label htmlFor="address" className="form-label">Dirección</label>
-                                        <input type="text" className="form-control" id="address" value={address} onChange={(e) => setAddress(e.target.value)} />
-                                    </div>
-                                    <div className="col-6 mb-3">
-                                        <label htmlFor="neighborhood" className="form-label">Barrio</label>
-                                        <input type="text" className="form-control" id="neighborhood" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="paymentMethod" className="form-label">Medio de pago</label>
-                                    <input type="text" className="form-control" id="paymentMethod" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} />
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="comments" className="form-label">Comentario</label>
-                                    <textarea className="form-control" id="comments" rows="3" value={comments} onChange={(e) => setComments(e.target.value)}></textarea>
-                                </div>
-                                <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" className="btn btn-secondary" data-bs-dismiss="modal">Enviar</button>
-                            </form>
+                    ))}
+                </div>
+            </div>
+            <div className='container'>
+                <div className="products-container" style={{ marginTop: '50px' }}>
+                    <h2>{productsAll}</h2>
+                    <br/>
+                    <div className='content-wrap'>
+                        <div className='shop row grid-container gutter-20 has-init-isotope'>
+                            <div className='d-flex flex-wrap'>
+                                {selectedCategory === null ? 
+                                    products.map((product, index) => (
+                                        <div className='col-6 col-md-3 col-sm-6' key={index} onClick={() => handleProductClick(product)}>
+                                            <img className="imgbrd" src={`${endpoint2}${product.img}`} alt={product.name} />
+                                            <h3>{product.name}</h3>
+                                            <p>{product.description}</p>
+                                            <p>{product.price}</p>
+                                        </div>
+                                    )) :
+                                    products.filter(product => parseInt(product.category) === selectedCategory).map((product, index) => (
+                                        <div className='col-6 col-md-3 col-sm-6' key={index} onClick={() => handleProductClick(product)}>
+                                            <img className="imgbrd" src={`${endpoint2}${product.img}`} alt={product.name} />
+                                            <h3>{product.name}</h3>
+                                            <p>{product.description}</p>
+                                            <p>{product.price}</p>
+                                        </div>
+                                    ))
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal fade" id="confir" tabindex="-1" aria-labelledby="confirModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="confirModalLabel">Recibimos tu orden</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <div className="cart-icon" onClick={toggleSidebar}>
+                    <i className="fas fa-truck"></i>
+                    <span className="top-cart-number">{numbercart}</span>
+                </div>
+                {isSidebarOpen && (
+                    <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+                        <div className="sidebar-footer imgContainer">
+                            {selectedProducts.map((product, index) => (
+                                <div className="sidebar-footer">
+                                    <div className='col-2' key={index}>
+                                        <img src={`${endpoint2}${product.img}`} alt={product.name}/>
+                                        <p>{product.name}</p>
+                                        <p>{product.price}</p>
+                                        <input type="number" min="1" name="cant" value={product.quantity} onChange={(e) => handleQuantityChange(index, e)}></input>
+                                        <button type="button" onClick={() => handleRemoveProduct(index, product.price)}>X</button>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                        <div class="modal-body">
-                            <img src="https://media.tenor.com/LLLJYVQJNVAAAAAM/chefs-kiss-french-chef.gif" alt="Chef's kiss gif" />
+                        <div className="sidebar-footer-logout">
+                            <h4>Total: {totalPrice.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}   </h4>                    
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type='submit' className='btn btn-secondary' onClick={openModal} >Confirmar orden</button>
+                    </div>
+                )}
+                <div className="modal fade" id="checkmodal" aria-labelledby="ModalLabel" aria-hidden="true">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h1 className="modal-title fs-5" id="ModalLabel">Información adicional</h1>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                <form onSubmit={store}>
+                                    <div className="row">
+                                        <div className="col-6 mb-3">
+                                            <label htmlFor="fullName" className="form-label">Nombre completo</label>
+                                            <input type="text" className="form-control" id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                                        </div>
+                                        <div className="col-6 mb-3">
+                                            <label htmlFor="phoneNumber" className="form-label">Teléfono - WhatsApp</label>
+                                            <input type="tel" className="form-control" id="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-6 mb-3">
+                                            <label htmlFor="address" className="form-label">Dirección</label>
+                                            <input type="text" className="form-control" id="address" value={address} onChange={(e) => setAddress(e.target.value)} />
+                                        </div>
+                                        <div className="col-6 mb-3">
+                                            <label htmlFor="neighborhood" className="form-label">Barrio</label>
+                                            <input type="text" className="form-control" id="neighborhood" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} />
+                                        </div>
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="paymentMethod" className="form-label">Medio de pago</label>
+                                        <input type="text" className="form-control" id="paymentMethod" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="comments" className="form-label">Comentario</label>
+                                        <textarea className="form-control" id="comments" rows="3" value={comments} onChange={(e) => setComments(e.target.value)}></textarea>
+                                    </div>
+                                    <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" className="btn btn-secondary" data-bs-dismiss="modal">Enviar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="confir" tabindex="-1" aria-labelledby="confirModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="confirModalLabel">Recibimos tu orden</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <img src="https://media.tenor.com/LLLJYVQJNVAAAAAM/chefs-kiss-french-chef.gif" alt="Chef's kiss gif" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
                         </div>
                     </div>
                 </div>

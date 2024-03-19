@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Navbar from '../navbar/navbar';
 import { socket } from '../../socket/socket';
-import { Modal, Button } from 'react-bootstrap';
-import {Link, useLocation} from 'react-router-dom'
+import {Modal, Button } from 'react-bootstrap';
+import {useLocation} from 'react-router-dom'
 import coinSound from '../../assets/audio/coin-sound.mp3';
 
 const endpoint = 'http://localhost:8000/api';

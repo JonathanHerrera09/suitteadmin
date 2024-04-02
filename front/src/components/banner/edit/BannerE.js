@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {useNavigate,useParams, useLocation, Link} from 'react-router-dom';
 import '../banners.css';
 const endpoint ='http://localhost:8000/api';
+/* const endpoint =process.env.REACT_APP_API_URL; */
 
 const BannerE = () => {
     const [name, setName] = useState('');
@@ -51,11 +52,12 @@ const BannerE = () => {
             headers: headers,
             ...credentials
         });
+        console.log(resp.data.Banner)
         setName(resp.data.Banner.name);
     };
     return (
         <div>
-            <h3> Crear Entrega</h3>
+            <h3> Editar Banner</h3>
             <div className="table-container saveb">
                 <form onSubmit={update}>
                     <div className="row">

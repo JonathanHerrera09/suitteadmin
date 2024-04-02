@@ -7,6 +7,7 @@ const Navbar = () => {
   const segment = location.pathname.split('/')[1];
   const kitchenLink = `/${segment}`;
   const endpoint ='http://localhost:8000/api/logout';
+  /* const endpoint =process.env.REACT_APP_API_URL+'/logout'; */
   const headers = {
       'Content-Type': 'application/json',
   };
@@ -71,28 +72,38 @@ const Navbar = () => {
         </div></div>
       </nav>
       {isSidebarOpen && (
-        <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-          <div className="sidebar-footer">
-            <a href={`${kitchenLink}/perfil`}>
+        <div className={`sidebarInter ${isSidebarOpen ? 'sidebarInter-open' : ''}`}>
+          <div className="sidebarInter-footer">
+            <a href={`${kitchenLink}/config`}>
               <i className="fas fa-user"></i> Perfil
             </a>
           </div>
-          <div className="sidebar-footer">
+          <div className="sidebarInter-footer">
+            <a href={`${kitchenLink}/config`}>
+              <i className="fas fa-users"></i> Usuarios
+            </a>
+          </div>
+          <div className="sidebarInter-footer">
             <a href={`${kitchenLink}/products`}>
               <i className="fas fa-box"></i> Productos
             </a>
           </div>
-          <div className="sidebar-footer">
+          <div className="sidebarInter-footer">
+            <a href={`${kitchenLink}/categorys`}>
+              <i className="fas fa-box-open"></i> Categorias
+            </a>
+          </div>
+          <div className="sidebarInter-footer">
             <a href={`${kitchenLink}/formDelivery`}>
               <i className="fas fa-table"></i> Forma de entregas
             </a>
           </div>
-          <div className="sidebar-footer">
+          <div className="sidebarInter-footer">
             <a href={`${kitchenLink}/banners`}>
               <i className="fas fa-image"></i> Banner cliente
             </a>
           </div>
-          <div className="sidebar-footer-logout">
+          <div className="sidebarInter-footer-logout">
             <a href="#"  onClick={logout}>
               <i className="fas fa-sign-out-alt"></i> Salir
             </a>

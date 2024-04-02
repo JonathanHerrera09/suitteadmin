@@ -1,12 +1,14 @@
 import axios from 'axios'
 import Navbar from '../../navbar/navbar';
 import React, {  useEffect, useState } from 'react';
-import {useNavigate, useParams, useLocation, Link} from 'react-router-dom';
+import {useNavigate, useParams, useLocation} from 'react-router-dom';
 import '../products.css';
-const endpoint ='http://localhost:8000/api';
-const endpoint2 ='http://localhost:8000/assets/';
+/* const endpoint =process.env.REACT_APP_API_URL;
+const endpoint2 =process.env.REACT_APP_ASSETS_URL; */
 
 const ProductE = () => {
+    const endpoint ='http://localhost:8000/api';
+    /* const endpoint2 ='http://localhost:8000/assets/'; */
     const navigate = useNavigate();
     const [categorys, setCategory] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -51,9 +53,7 @@ const ProductE = () => {
     const credentials = {
         withCredentials: true
     };    
-    useEffect (()=>{
-        getProductById()   
-    }, [])
+   
     const getProductById = async () => {
         const resp = await axios.get(`${endpoint}${kitchenLink}/productE/${id}`, {
             headers: headers,
@@ -66,14 +66,17 @@ const ProductE = () => {
         setDescription(resp.data.product.description);
         setSelectedCategory(resp.data.product.category.toString()); // Setea el valor seleccionado del tipo de servicio
     };
+    useEffect (()=>{
+        getProductById()   
+    }, [])
     return (
         <div>
-            <h3> Crear Producto</h3>
+            <h3> Editar Producto</h3>
             <div className="table-container saveb">
                 <form onSubmit={updateProduct}>
                     <div className="row">
                         <div className="col-6 mb-3">
-                            <label className='form-label'>Tipo de servicio</label>
+                            <label className='form-label'>Tipo de categoria</label>
                             <select
                                 className='form-select'
                                 value={selectedCategory}

@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\loginController;
 use App\Http\Controllers\Api\saleController;
 use App\Http\Controllers\Api\typeServiceController;
 use App\Http\Controllers\Api\bannerController;
+use App\Http\Controllers\Api\configController;
+use App\Http\Controllers\Api\categoryController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,6 +25,10 @@ use App\Http\Controllers\Api\bannerController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::controller(configController::class)->group(function (){
+    Route::get('/{kitchen}/config',                  'index');
+    Route::post('/{kitchen}/config',                 'update');
+});
 Route::controller(saleController::class)->group(function (){
     Route::get('/{kitchen}/sales',                  'index');
     Route::post('/{kitchen}/sale',                  'store');
@@ -35,7 +41,7 @@ Route::controller(kitchenController::class)->group(function (){
 Route::controller(deliveryController::class)->group(function (){
     Route::get('/{kitchen}/deliverys',              'index');
     Route::get('/{kitchen}/delivery/{id}',          'show');
-    Route::put('/{kitchen}/delivery/{id}',          'update');
+    Route::post('/{kitchen}/delivery',               'update');
 });
 Route::controller(bannerController::class)->group(function (){
     Route::get('/{kitchen}/banners',                'index');
@@ -43,6 +49,13 @@ Route::controller(bannerController::class)->group(function (){
     Route::get('/{kitchen}/banner/{id}',            'show');
     Route::post('/{kitchen}/bannerE/{id}',          'update');
     Route::delete('/{kitchen}/banner/{id}',         'destroy');
+});
+Route::controller(categoryController::class)->group(function (){
+    Route::get('/{kitchen}/categorys',              'index');
+    Route::post('/{kitchen}/categoryC',             'store');
+    Route::get('/{kitchen}/category/{id}',          'show');
+    Route::post('/{kitchen}/categoryE/{id}',        'update');
+    Route::delete('/{kitchen}/category/{id}',       'destroy');
 });
 Route::controller(typeServiceController::class)->group(function (){
     Route::get('/{kitchen}/typeS',                  'index');
@@ -68,4 +81,5 @@ Route::controller(productController::class)->group(function (){
     Route::post('/{kitchen}/productup/{id}',        'updateProd');
     Route::delete('/{kitchen}/product/{id}',        'destroy');
     Route::delete('/{kitchen}/productdel/{id}',     'productdel');
-});
+    Route::post('/{kitchen}/exportSales',           'exportSales');
+})->withoutMiddleware(['csrf']);

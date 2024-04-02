@@ -6,6 +6,8 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 const endpoint = 'http://localhost:8000/api';
 const endpoint2 ='http://localhost:8000/assets/';
+/* const endpoint =process.env.REACT_APP_API_URL;
+const endpoint2 =process.env.REACT_APP_ASSETS_URL; */
 
 const EditProduct = () => {
     const location = useLocation();

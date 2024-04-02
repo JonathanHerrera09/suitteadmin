@@ -5,6 +5,8 @@ import {useNavigate, useLocation, Link} from 'react-router-dom';
 import '../products.css';
 const endpoint ='http://localhost:8000/api';
 const endpoint2 ='http://localhost:8000/assets/';
+/* const endpoint =process.env.REACT_APP_API_URL;
+const endpoint2 =process.env.REACT_APP_ASSETS_URL; */
 
 const ProductC = () => {
     const [categorys, setCategory] = useState([]);
@@ -67,7 +69,7 @@ const ProductC = () => {
                 <form onSubmit={store}>
                     <div className="row">
                         <div className="col-6 mb-3">
-                            <label className='form-label'>Tipo de servicio</label>
+                            <label className='form-label'>Tipo de categoria</label>
                             <select
                                 className='form-select'
                                 value={selectedCategory}

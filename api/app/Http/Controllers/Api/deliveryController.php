@@ -29,12 +29,61 @@ class deliveryController extends Controller
         $dato['typeService'] = TypeService::all();
         return $dato;
     }
-    public function update(Request $request, $kitchen, string $id)
+    public function update(Request $request, $kitchen)
     {
         $this->setup($kitchen);
-        $Order = Order::findOrFail($request->id);
+        $Order = new Order(); 
+        $type = $request->input('type');
+        if($type == 0){
+            $product = $request->input('product');
+            $AllProducts=Order::find($product);
+            $ProductI=json_decode($AllProducts->products);
+            $bndr = 0;
+            foreach($ProductI as $item){
+                if($item->priority == 1){
+                    $bndr=1;
+                }
+            }
+            if($bndr == 0){
+                $Order = Order::findOrFail($product);
+                $Order->status = 2;
+                $Order->save();
+                $dato['msg']='Se actualizo correctamente';
+                $dato['type']=1;
+            }else{
+                $dato['msg']='Aun hay productos sin estar preparados';
+                $dato['type']=0;
+            }
+        }else{
+            $product = $request->input('product');
+            $AllProducts=Order::find($product['id_or']);
+            $ProductI=json_decode($AllProducts->products);
+            $bndr = 0;
+            $product['priority']=3;
+            foreach($ProductI as $item){
+                if($item->priority == 1){
+                    $bndr=1;
+                }
+            }
+            if($bndr == 0){
+                $Order = Order::findOrFail($product);
+                $Order->status = 2;
+                $Order->save();
+                $dato['msg']='Se actualizo correctamente';
+                $dato['type']=1;
+            }else{
+                
+                print_r($product);
+                $dato['msg']='Aun hay productos sin estar preparados';
+                $dato['type']=0;
+            }
+            /* print_r($AllProducts); */
+        }
+        /* print_r($type); */
+        
+       /*  $Order = Order::findOrFail($request->id);
         $Order->products = json_encode($request->product);
         $Order->save();
-        return $Order;
-    }
+        return $Order;*/
+    } 
 }

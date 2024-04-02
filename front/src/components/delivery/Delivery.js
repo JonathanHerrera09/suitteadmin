@@ -9,6 +9,9 @@ import coinSound from '../../assets/audio/coin-sound.mp3';
 const endpoint = 'http://localhost:8000/api';
 const endpoint2 ='http://localhost:8000/assets/';
 
+/* const endpoint =process.env.REACT_APP_API_URL;
+const endpoint2 =process.env.REACT_APP_ASSETS_URL+''; */
+
 const audio = new Audio(coinSound);
 
 const Delivery = () => {
@@ -30,7 +33,9 @@ const Delivery = () => {
     const credentials = {
         withCredentials: true
     };
-    const [orders, setOrders] = useState([]);    
+    const [orders, setOrders] = useState([]);
+    const [productId, setProductId] = useState();
+    const [product, setProduct] = useState();
     const [selectedProduct, setSelectedProduct] = useState([]);
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [deliverys, setDeliverys] = useState([]);
@@ -38,19 +43,17 @@ const Delivery = () => {
     const [audioPermission, setAudioPermission] = useState(true);
     const [showPermissionMessage, setShowPermissionMessage] = useState(false);
     const [showInfoMessage, setShowInfoMessage] = useState(false);
+    const [show, setShow] = useState(false);
+    const [show2, setShow2] = useState(false);
 
     useEffect(() => {
         const handleSocketConnection = () => {
             setIsConnected(socket.connected);
         };
-
         socket.on('connect', handleSocketConnection);
         socket.on('get-new-order', handleNewOrder);
-        
         getAllOrder();
-
         requestAudioPermission();
-
         return () => {
             socket.off('connect', handleSocketConnection);
             socket.off('get-new-order', handleNewOrder);
@@ -103,11 +106,37 @@ const Delivery = () => {
             return 'bg-success';
         }
     };
+    const modalcheck = (product) => {
+        setShow(true);
+        setProductId(product);
+    };
+    const modalcheck2 = (product) => {
+        setShow2(true);
+        setProduct(product);
+    };
+    
+    const upcheck = async (valid) => {
+        await axios.post(`${endpoint}${kitchenLink}/delivery`, {           
+            type:0,
+            product:productId
+        },{
+            headers: headers,
+            ...credentials
+        });
+
+    }
+    const upcheck2 = async (valid) => {
+        await axios.post(`${endpoint}${kitchenLink}/delivery`, {           
+            type:1,
+            product:product
+        },{
+            headers: headers,
+            ...credentials
+        });
+
+    }
     const openModal = (product) => {
-        
-       /*  console.log(product.products); */
         var productcc = JSON.parse(product.products);
-        console.log(productcc);
         setSelectedProduct(product);
         setSelectedProducts(productcc);
         setShowInfoMessage(true)
@@ -141,7 +170,7 @@ const Delivery = () => {
                                             <h5 className="card-title"> {product.type_service_name} - {product.name}</h5>                                            
                                             <br/>
                                             <div className="d-grid gap-2 col-12 mx-auto">
-                                                <button className="btn btn-secondary" type="button">Entregado</button>                                                
+                                                <button className="btn btn-secondary" onClick={() => modalcheck2(product)}  type="button">Entregado</button>                                                
                                             </div>
                                         </div>
                                     </div>
@@ -151,14 +180,15 @@ const Delivery = () => {
                 ))}
                 <h3> Domicilios</h3>
                 {deliverys.map((orderD, index) => (
-                    <div key={`delivery-${orderD.id}-${index}`} className="col-md-4 mb-4">
+                    
+                    <div key={`delivery-${orderD.id}-${index}`} className="col-md-4 mb-4" >
                             <div className={`card ${getCardColor(calculateCompletion(orderD))}`}>                        
                                 <div className="card-body">
                                     <h5 className="card-title">{orderD.type_service_name}</h5>
                                     <p className="card-text">Direccion de entrega: {orderD.address}</p>
                                     <p className="card-text">Total Products: {JSON.parse(orderD.products).length}</p>
                                     <div className="d-grid gap-2 col-12 mx-auto">
-                                        <button className="btn btn-secondary" type="button">Entregado</button>                                                
+                                        <button className="btn btn-secondary" onClick={() => modalcheck(orderD.id)}  type="button">Entregado</button>                                                
                                         <button className="btn btn-light" onClick={() => openModal(orderD)} type="button">Info</button>
                                     </div>
                                 </div>
@@ -166,12 +196,14 @@ const Delivery = () => {
                     </div>
                 ))}
             </div>
+            <div style={{ paddingBottom: '100px' }}></div>
             <Modal show={showInfoMessage} onHide={() => setShowInfoMessage(false)}>
                 <div className="modal-body" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', overflowX: 'auto' }}>
                     {selectedProduct && (
                         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <p>ID: {selectedProduct.id}</p>
                             <p>Mesa o domicilio: {selectedProduct.type_service_name}</p>
+                            <p><b>Direccion: {selectedProduct.address}</b></p>
                             <p>Valor a pagar: {selectedProduct.price}</p>
                             <p>Estado: {selectedProduct.status_name}</p>
                             <p>Productos:  </p>
@@ -191,7 +223,38 @@ const Delivery = () => {
                     
                 </div>
             </Modal>
-            
+            <Modal show={show} onHide={() => setShow(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>¿Terminaste?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <b>¿Ya entregaste esta orden?</b>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="danger" onClick={() => setShow(false)}>
+                        No
+                    </Button>
+                    <Button variant="success" onClick={() => upcheck(1)}>
+                        Si
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal show={show2} onHide={() => setShow2(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>¿Terminaste?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <b>¿Ya entregaste este producto?</b>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="danger" onClick={() => setShow2(false)}>
+                        No
+                    </Button>
+                    <Button variant="success" onClick={() => upcheck2(1)}>
+                        Si
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             <Navbar/>
         </div>
     );

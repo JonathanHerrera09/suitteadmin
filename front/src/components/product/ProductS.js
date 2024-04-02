@@ -2,10 +2,11 @@ import axios from 'axios'
 import Navbar from '../navbar/navbar';
 import React, { useEffect, useState } from 'react';
 import {useNavigate, useLocation, Link} from 'react-router-dom';
-import {socket} from '../../socket/socket';
 import './products.css';
 const endpoint ='http://localhost:8000/api';
 const endpoint2 ='http://localhost:8000/assets/';
+/* const endpoint =process.env.REACT_APP_API_URL;
+const endpoint2 =process.env.REACT_APP_ASSETS_URL; */
 
 const ProductS = () => {
     const [products, setProducts] = useState( [] );
@@ -55,33 +56,35 @@ const ProductS = () => {
                 <Link to={`${kitchenLink}/productC/`} className="btn btn-secondary btn-custom-width">
                     CREAR PRODUCTO
                 </Link>
-                <table className='table table-striped'>
-                    <thead className='table-bordered bg-primary text-white'>
-                        <tr>
-                            <th>Acciones</th>
-                            <th>Img</th>
-                            <th>Nombre</th>
-                            <th>Precio</th>
-                            <th>Decripcion</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {products.map((product)=>(
-                            <tr key={product.id}>
-                                <td className='iniA'>
-                                    <Link to={`${kitchenLink}/productE/${product.id}`}>
-                                        <i className="fas fa-pencil-alt"></i>
-                                    </Link>                                    
-                                    &nbsp;&nbsp;<i onClick={() => deleteProducts(product.id)} className="fas fa-trash-alt"></i>&nbsp;&nbsp;
-                                </td>
-                                <img src={`${endpoint2}${product.img}`} alt={product.name} style={{ maxWidth: '30%', height: 'auto' }} />
-                                <td>{product.name}</td>
-                                <td>{product.price}</td>
-                                <td>{product.description}</td>
+                <div style={{ paddingBottom: '100px' }}>
+                    <table className='table table-striped'>
+                        <thead className='table-bordered bg-primary text-white'>
+                            <tr>
+                                <th>Acciones</th>
+                                <th>Img</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Decripcion</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {products.map((product)=>(
+                                <tr key={product.id}>
+                                    <td className='iniA'>
+                                        <Link to={`${kitchenLink}/productE/${product.id}`}>
+                                            <i className="fas fa-pencil-alt"></i>
+                                        </Link>                                    
+                                        &nbsp;&nbsp;<i onClick={() => deleteProducts(product.id)} className="fas fa-trash-alt"></i>&nbsp;&nbsp;
+                                    </td>
+                                    <img src={`${endpoint2}${product.img}`} alt={product.name} style={{ maxWidth: '30%', height: 'auto' }} />
+                                    <td>{product.name}</td>
+                                    <td>{product.price}</td>
+                                    <td>{product.description}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <Navbar/>
         </div>

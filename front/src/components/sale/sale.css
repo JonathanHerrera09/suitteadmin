@@ -19,7 +19,7 @@
     z-index: 10000;
     bottom: 80px;
     right: 25px;
-    background:rgba(255, 104, 17, 0.9);
+    /* background:rgba(255, 104, 17, 0.9); */
     border-radius:50%;
     width:50px;
     height: 50px;
@@ -27,8 +27,8 @@
     justify-content: center;
     display: flex;
 }
-.sidebar {
-    background-color: rgba(255, 104, 17, 0.9); /* Cambié el color a un tono ligeramente más claro */
+.sidebarSales {
+    /* background-color: rgba(255, 104, 17, 0.9); */ /* Cambié el color a un tono ligeramente más claro */
     color: white;
     display: flex;
     flex-direction: column;
@@ -40,24 +40,25 @@
     bottom: 0;
     left: 0;
     width: 250px;
+    height: 100%;
     z-index: 999;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Agregué una sombra para suavizar los bordes */
   }
   
-  .sidebar a {
+  .sidebarSales a {
     color: white;
     text-decoration: none;
     margin-bottom: 10px;
     font-size: 16px; /* Reduje el tamaño del texto */
   }
-  .sidebar a:hover {
+  .sidebarSales a:hover {
     opacity: 0.8;
   }
-  .sidebar-footer {
-    margin: 20px; /* Empuja el footer al fondo del sidebar */
+  .sidebarSales-footer {
+    margin: 10px; /* Empuja el footer al fondo del sidebarSales */
   }
-  .sidebar-footer-logout {
-    margin-top: auto; /* Empuja el footer al fondo del sidebar */
+  .sidebarSales-footer-logout {
+    margin-top: auto; /* Empuja el footer al fondo del sidebarSales */
   }
   .top-cart-item-image{
     width:40px;
@@ -75,11 +76,11 @@
     right: 5px; /* Alineación derecha */
 }
 /* Estilos para el campo de entrada de la cantidad */
-.imgContainer input[type="number"] {
+.imgContainer input[type="text"] {
     width: 30px;
     margin-top: 5px;
     background-color: transparent;
-    border-color: white;
+    border-color: transparent;
 }
 .imgContainer {
   display: flex;
@@ -112,4 +113,7 @@
 	background-color: #f44336;
 	opacity: 0.8;
 	z-index: -1;
+}
+.cardSale{
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);  
 }

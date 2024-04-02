@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Navbar from '../navbar/navbar';
-import { socket } from '../../socket/socket';
 import { Modal } from 'bootstrap';
-import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import coinSound from '../../assets/audio/coin-sound.mp3';
 
 const endpoint = 'http://localhost:8000/api';
 const endpoint2 ='http://localhost:8000/assets/';
+/* const endpoint =process.env.REACT_APP_API_URL;
+const endpoint2 =process.env.REACT_APP_ASSETS_URL; */
 
 const audio = new Audio(coinSound);
 

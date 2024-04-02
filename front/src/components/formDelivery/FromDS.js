@@ -2,10 +2,11 @@ import axios from 'axios'
 import Navbar from '../navbar/navbar';
 import React, { useEffect, useState } from 'react';
 import {useNavigate, useLocation, Link} from 'react-router-dom';
-import {socket} from '../../socket/socket';
 import './fromds.css';
 const endpoint ='http://localhost:8000/api';
 const endpoint2 ='http://localhost:8000/assets/';
+/* const endpoint =process.env.REACT_APP_API_URL;
+const endpoint2 =process.env.REACT_APP_ASSETS_URL+''; */
 
 const FromDS = () => {
     const [detays, setDetays] = useState( [] );
@@ -55,29 +56,31 @@ const FromDS = () => {
                 <Link to={`${kitchenLink}/fromDeliveryC/`} className="btn btn-secondary btn-custom-width">
                     CREAR ENTREGA
                 </Link>
-                <table className='table table-striped'>
-                    <thead className='table-bordered bg-primary text-white'>
-                        <tr>
-                            <th>Acciones</th>
-                            <th>Id</th>
-                            <th>Nombre</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {detays.map((detay)=>(
-                            <tr key={detay.id}>
-                                <td className='iniA'>
-                                    <Link to={`${kitchenLink}/fromDeliveryE/${detay.id}`}>
-                                        <i className="fas fa-pencil-alt"></i>
-                                    </Link>                                    
-                                    &nbsp;&nbsp;<i onClick={() => deleteProducts(detay.id)} className="fas fa-trash-alt"></i>&nbsp;&nbsp;
-                                </td>
-                                <td>{detay.id}</td>
-                                <td>{detay.name}</td>
+                <div style={{ paddingBottom: '100px' }}>
+                    <table className='table table-striped'>
+                        <thead className='table-bordered bg-primary text-white'>
+                            <tr>
+                                <th>Acciones</th>
+                                <th>Id</th>
+                                <th>Nombre</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {detays.map((detay)=>(
+                                <tr key={detay.id}>
+                                    <td className='iniA'>
+                                        <Link to={`${kitchenLink}/fromDeliveryE/${detay.id}`}>
+                                            <i className="fas fa-pencil-alt"></i>
+                                        </Link>                                    
+                                        &nbsp;&nbsp;<i onClick={() => deleteProducts(detay.id)} className="fas fa-trash-alt"></i>&nbsp;&nbsp;
+                                    </td>
+                                    <td>{detay.id}</td>
+                                    <td>{detay.name}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <Navbar/>
         </div>

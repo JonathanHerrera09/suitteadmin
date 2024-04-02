@@ -15,25 +15,13 @@ const ShowProduct = () => {
     const location = useLocation();
     const segment = location.pathname.split('/')[1];
     const kitchenLink = `/${segment}`;
-    useEffect(() => {
-        const pathnameWithoutSlash = location.pathname.substring(1);
-        const kitchen = localStorage.getItem('kitchen');
-        if (pathnameWithoutSlash !==kitchen) {
-            window.location.href = '/login';
-        } else {
-            getAllProducts();
-        }
-    }, [location]);
+    
     const headers = {
         'Content-Type': 'application/json',
     };
     const credentials = {
         withCredentials: true
-    };    
-    
-    useEffect (()=>{
-        getAllProducts()   
-    }, [])
+    };
     const getAllProducts = async() =>{
        const resp = await axios.get(`${endpoint}${kitchenLink}/products`, {
         headers: headers,
@@ -56,11 +44,64 @@ const ShowProduct = () => {
         const myModal = new Modal(document.getElementById('exampleModal')); // Inicializa la modal
         myModal.show(); // Muestra la modal
     }
+    const exportToExcel = (startDate, endDate) => {
+        // Realizar la solicitud HTTP al backend
+        axios.post(`${endpoint}${kitchenLink}/exportSales`, {
+            start_date: startDate,
+            end_date: endDate
+        }, {
+            headers: headers,
+            withCredentials: true, // Incluir las credenciales en la solicitud
+            responseType: 'blob' // Para indicar que esperamos un archivo binario (Excel)
+        })
+        .then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'sales.xlsx');
+            document.body.appendChild(link);
+            link.click();
+        })
+        .catch(error => {
+            console.error('Error al exportar a Excel:', error);
+        });
+    };
+    const handleExportClick = () => {
+        // Obtener las fechas seleccionadas por el usuario (puedes obtenerlas de tus estados de React)
+        const startDate = '2023-03-01'; // Ejemplo: Obtener la fecha de inicio
+        const endDate = '2024-03-31'; // Ejemplo: Obtener la fecha de fin
+    
+        // Llamar a la función de exportación
+        exportToExcel(startDate, endDate);
+    };
+    useEffect(() => {
+        const pathnameWithoutSlash = location.pathname.substring(1);
+        const kitchen = localStorage.getItem('kitchen');
+        if (pathnameWithoutSlash !==kitchen) {
+            window.location.href = '/login';
+        } else {
+            getAllProducts();
+        }
+    },[]);
+    /* useEffect (()=>{
+        getAllProducts()   
+    },[]) */
   return (
     <div>  
         <div className='titleC'>
                 Ordenes
-        </div>      
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-evenly', marginBottom: '20px' }}>
+            <div>
+                <input type="date" />
+            </div>
+            <div>
+                <input type="date" />
+            </div>
+            <div>
+                <button onClick={handleExportClick} className="btn btn-success">Exportar Excel</button>
+            </div>
+        </div>
         <div className="table-container">           
             <table className='table table-striped'>
                 <thead className='table-bordered bg-primary text-white'>

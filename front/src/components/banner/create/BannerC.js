@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {useNavigate, useLocation, Link} from 'react-router-dom';
 import '../banners.css';
 const endpoint ='http://localhost:8000/api';
+/* const endpoint =process.env.REACT_APP_API_URL; */
 
 const BannerC = () => {
     const [name, setName] = useState('');
@@ -43,7 +44,7 @@ const BannerC = () => {
     };
     return (
         <div>
-            <h3> Crear banner</h3>
+            <h3> Crear Banner</h3>
             <div className="table-container saveb">
                 <form onSubmit={store}>
                     <div className="row">

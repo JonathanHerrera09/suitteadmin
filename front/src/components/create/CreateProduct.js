@@ -7,7 +7,8 @@ import {useNavigate, useLocation} from 'react-router-dom';
 import {socket} from '../../socket/socket';
 const endpoint ='http://localhost:8000/api';
 const endpoint2 ='http://localhost:8000/assets/';
-
+/* const endpoint =process.env.REACT_APP_API_URL;
+const endpoint2 =process.env.REACT_APP_ASSETS_URL; */
 const CreateProduct = () => {
     const location = useLocation();
     const segment = location.pathname.split('/')[1];
@@ -67,13 +68,46 @@ const CreateProduct = () => {
             return updatedProducts;
         });
     };
-    const handleRemoveProduct = (index, productPrice) => {
+    const handleIncrement = (index) => {
+        setSelectedProducts(prevSelectedProducts => {
+            const updatedProducts = prevSelectedProducts.map((product, i) => {
+                if (i === index) {
+                    return {
+                        ...product,
+                        quantity: product.quantity + 1
+                    };
+                }
+                return product;
+            });
+            setTotalPrice(updatedProducts.reduce((acc, producto) => acc + producto.price * producto.quantity, 0)); // Actualizar el precio total
+            return updatedProducts;
+        });
+    }
+
+    // Manejar decremento
+    const handleDecrement = (index) => {
+        setSelectedProducts(prevSelectedProducts => {
+            const updatedProducts = prevSelectedProducts.map((product, i) => {
+                if (i === index && product.quantity > 1) {
+                    return {
+                        ...product,
+                        quantity: product.quantity - 1
+                    };
+                }
+                return product;
+            });
+            setTotalPrice(updatedProducts.reduce((acc, producto) => acc + producto.price * producto.quantity, 0)); // Actualizar el precio total
+            return updatedProducts;
+        });
+    }
+    const handleRemoveProduct = (index, productPrice, productQuantity) => {
+        var elimTotalPrice = productPrice * productQuantity;
         setSelectedProducts(prevSelectedProducts => {
             const updatedProducts = [...prevSelectedProducts];
             const deletedProduct = updatedProducts.splice(index, 1)[0];            
             return updatedProducts;
         });
-        setTotalPrice(prevTotalPrice => prevTotalPrice - productPrice);
+        setTotalPrice(prevTotalPrice => prevTotalPrice - elimTotalPrice);
     };
     const handleQuantityChange = (index, event) => {
         const newQuantity = parseInt(event.target.value);
@@ -179,13 +213,24 @@ const CreateProduct = () => {
                             <div className="sidebar-footer imgContainer">
                                 {selectedProducts.map((product, index) => (
                                     <div className="sidebar-footer">
-                                        <div className='col-2' key={index}>
-                                            <img src={`${endpoint2}${product.img}`} alt={product.name}/>
-                                            <p>{product.name}</p>
-                                            <p>{product.price}</p>
-                                            <input type="number" min="1" name="cant" value={product.quantity} onChange={(e) => handleQuantityChange(index, e)}></input>
-                                            <button type="button" onClick={() => handleRemoveProduct(index, product.price)}>X</button>
-                                        </div>
+                                        <div className='col-12' key={index}>
+                                            <div className="row g-0">
+                                                <div className="col-md-12 col-12">
+                                                <p>{product.name}</p>
+                                                </div>
+                                                <div className="col-md-6 col-6">
+                                                    <img className="imgbrd" src={`${endpoint2}${product.img}`} alt={product.name}/>
+                                                    <p>{product.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}</p>
+                                                    
+                                                </div>
+                                                <div className="col-md-6 col-6">
+                                                    <i className="fas fa-plus" style={{color: "white"}} onClick={() => handleIncrement(index)}></i>
+                                                        <input style={{ color: 'white', borderRadius: '50%', textAlign: 'center'}} type="text" min="1" name="cant" value={product.quantity} onChange={(e) => handleQuantityChange(index, e)} disabled></input>
+                                                    <i className="fas fa-minus" style={{color: "white"}} onClick={() => handleDecrement(index)}></i>
+                                                    <i className="fas fa-times-circle top-0 end-0 m-1 fs-4" onClick={() => handleRemoveProduct(index, product.price, product.quantity)} ></i>
+                                                </div>
+                                            </div>
+                                        </div>  
                                     </div>
                                 ))}
                             </div>

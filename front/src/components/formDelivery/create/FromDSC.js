@@ -1,9 +1,11 @@
 import axios from 'axios'
 import Navbar from '../../navbar/navbar';
 import React, { useEffect, useState } from 'react';
-import {useNavigate, useLocation, Link} from 'react-router-dom';
+import {useNavigate, useLocation} from 'react-router-dom';
 import '../fromds.css';
 const endpoint ='http://localhost:8000/api';
+/* const endpoint =process.env.REACT_APP_API_URL; */
+
 
 const FromDSC = () => {
     const [name, setName] = useState('');

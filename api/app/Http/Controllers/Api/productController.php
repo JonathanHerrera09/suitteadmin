@@ -3,6 +3,11 @@ namespace App\Http\Controllers\Api;
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Session;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Illuminate\Support\Facades\Response;
+
 use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -17,6 +22,37 @@ class productController extends Controller
     {
         $bd_account=DatabaseHelper::ConnectMaster($kitchen);
         DatabaseHelper::Connect($bd_account);
+    }
+    public function exportSales(Request $request, string $kitchen)
+    {
+        try {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+            $products = Order::whereBetween('created_at', [$startDate, $endDate])->get();
+            
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'ID');
+            $sheet->setCellValue('B1', 'Producto');
+            $sheet->setCellValue('C1', 'Precio');
+            
+            $row = 2;
+            foreach ($products as $product) {
+                $sheet->setCellValue('A' . $row, $product->id);
+                $sheet->setCellValue('B' . $row, $product->name);
+                $sheet->setCellValue('C' . $row, $product->price);
+                $row++;
+            }
+            
+            $writer = new Xlsx($spreadsheet);
+            $exportPath = public_path('assets/exports');
+            $filename = 'sales.xlsx';
+            $filePath = $exportPath . '/' . $filename;
+            $writer->save($filePath);
+            /* return response()->file($filePath); */
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e], 500);
+        }        
     }
     public function index($kitchen)
     {      

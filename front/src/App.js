@@ -20,6 +20,10 @@ import FromDSE from './components/formDelivery/edit/FromDSE';
 import Banners from './components/banner/Banners';
 import BannerC from './components/banner/create/BannerC';
 import BannerE from './components/banner/edit/BannerE';
+import Config from './components/config/Config';
+import Categorys from './components/category/Category';
+import CategoryC from './components/category/create/CategoryC';
+import CategoryE from './components/category/edit/CategoryE';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importa los estilos de Bootstrap
 import 'bootstrap';
 
@@ -50,6 +54,10 @@ function App() {
           <Route path='/:kitchen/banners' element={ <Banners/> } />
           <Route path='/:kitchen/bannerC' element={ <BannerC/> } />
           <Route path='/:kitchen/bannerE/:id' element={ <BannerE/> } />
+          <Route path='/:kitchen/categorys' element={ <Categorys/> } />
+          <Route path='/:kitchen/categoryC' element={ <CategoryC/> } />
+          <Route path='/:kitchen/categoryE/:id' element={ <CategoryE/> } />
+          <Route path='/:kitchen/config' element={ <Config/> } />
           <Route path='/Login' element={ <Login/> } />
         </Routes>
       </BrowserRouter>

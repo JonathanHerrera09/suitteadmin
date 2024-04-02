@@ -1,9 +1,10 @@
 import axios from 'axios'
 import Navbar from '../../navbar/navbar';
 import React, { useEffect, useState } from 'react';
-import {useNavigate,useParams, useLocation, Link} from 'react-router-dom';
+import {useNavigate,useParams, useLocation} from 'react-router-dom';
 import '../fromds.css';
 const endpoint ='http://localhost:8000/api';
+/* const endpoint =process.env.REACT_APP_API_URL; */
 
 const FromDSE = () => {
     const [name, setName] = useState('');
@@ -50,7 +51,7 @@ const FromDSE = () => {
     };
     return (
         <div>
-            <h3> Crear Entrega</h3>
+            <h3> Editar Entrega</h3>
             <div className="table-container saveb">
                 <form onSubmit={update}>
                     <div className="row">

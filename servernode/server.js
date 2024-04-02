@@ -9,6 +9,7 @@ const httpServer = createServer(app);
 const ioServer = new Server(httpServer, {
     cors: {
         origin: "http://localhost:3000",
+        /* origin: "http://18.118.226.208:3000", */
     }
 });
 

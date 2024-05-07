@@ -49,7 +49,7 @@ class productController extends Controller
             $filename = 'sales.xlsx';
             $filePath = $exportPath . '/' . $filename;
             $writer->save($filePath);
-            /* return response()->file($filePath); */
+            return $filePath;
         } catch (\Exception $e) {
             return response()->json(['error' => $e], 500);
         }        

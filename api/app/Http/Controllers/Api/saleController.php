@@ -47,7 +47,7 @@ class saleController extends Controller
         $Order->products = json_encode($request->product); 
 
         $Order->save();
-        $this->generarPDF($request, $kitchen);
+      /*   $this->generarPDF($request, $kitchen); */
         return $Order; 
     }
     public function generarPDF(Request $request, $kitchen)

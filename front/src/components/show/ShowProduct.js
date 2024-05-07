@@ -39,7 +39,7 @@ const ShowProduct = () => {
     const openModal = (product) => {
         
         product.products =JSON.parse(product.products);
-        console.log(product.products);
+        /* console.log(product.products); */
         setSelectedProduct(product);
         const myModal = new Modal(document.getElementById('exampleModal')); // Inicializa la modal
         myModal.show(); // Muestra la modal

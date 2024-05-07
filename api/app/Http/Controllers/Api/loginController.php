@@ -26,7 +26,7 @@ class loginController extends Controller
         return $user;
     }
     public function login(Request $request)
-    {       
+    {
         $cocina = $request->input('kitchen');
         $usuario = $request->input('user');
         $contraseña = $request->input('password');
@@ -52,32 +52,32 @@ class loginController extends Controller
             'engine' => null,
         ]]);
         $users = DB::connection('dynamic')->select(...);
-        if(Auth::attempt($request->only('user','password'))){
+        if (Auth::attempt($request->only('user', 'password'))) {
             $user = Auth::user();
             $token = $user->createToken('token')->plainTextToken;
             $cookie = cookie('jwt', $token, 1440);
             return response([
-                'message'=> $token,
-                'kitchen'=>$account->kitchen
+                'message' => $token,
+                'kitchen' => $account->kitchen
             ])->withCookie($cookie);
-           /*  return response()->json(['message' => 'Login exitoso'], 200); */
-
+            /*  return response()->json(['message' => 'Login exitoso'], 200); */
         } else {
             return response()->json(['message' => 'Credenciales inválidas'], 401);
         }
-
     }
-    public function user(){
+    public function user()
+    {
         return Auth::user();
     }
-    public function logout($kitchen){
-        $bd_account=DatabaseHelper::ConnectMaster($kitchen);
+    public function logout($kitchen)
+    {
+        $bd_account = DatabaseHelper::ConnectMaster($kitchen);
         DatabaseHelper::Connect($bd_account);
-        
+
         $cookie = Cookie::forget('jwt');
 
         return response([
-            'message'=> 'Logout exitoso'
+            'message' => 'Logout exitoso'
         ])->withCookie($cookie);
     }
 }

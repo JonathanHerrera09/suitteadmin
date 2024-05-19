@@ -1,0 +1,77 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.register-b {
+  background-image: url('../../assets/registerbg.jpg'); /* Ruta de la imagen de fondo */
+  background-size: cover;
+  background-position: center bottom 55%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.register-box {
+  margin: 10px;
+  border-radius: 20px !important;
+}
+
+.card {
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 10px 20px rgba(0,0,0,.1);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 50px !important;
+  border-radius: 50px;
+  color: #ff6811 !important;
+  text-align: center;
+}
+
+.card-body {
+  padding: 40px !important;
+  text-align: center;
+}
+
+.card-footer {
+  padding: 20px !important;
+  text-align: center;
+}
+
+.card-price {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.btn-signup {
+  width: 100%;
+  padding: 10px;
+  border-radius: 50px;
+  font-size: 1em;
+  font-weight: bold;
+}
+.btn-registerN{
+    color: black !important;
+    border-color: black !important;
+    
+}
+.btn-registerN:hover{
+  color: #ffffff !important;
+  background-color:black !important;;
+}
+hr{
+  color:#ff6811 !important;;
+}
+@media (max-width: 768px) {
+  .register-box {
+    width: 100%;
+    margin: 10px 0;
+  }
+}

@@ -5,8 +5,9 @@ import './navbar.css'; // Archivo CSS para estilos personalizados
 const Navbar = () => {
   const location = useLocation();  
   const segment = location.pathname.split('/')[1];
-  const kitchenLink = `/${segment}`;
-  const endpoint ='http://localhost:8000/api/logout';
+  const kitchenLink = `${segment}`;
+  const endpoint =`http://localhost:8000/api/${kitchenLink}/logout/${kitchenLink}`;
+  console.log(endpoint);
   /* const endpoint =process.env.REACT_APP_API_URL+'/logout'; */
   const headers = {
       'Content-Type': 'application/json',

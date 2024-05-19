@@ -25,52 +25,52 @@ use App\Http\Controllers\Api\categoryController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::controller(configController::class)->group(function (){
+Route::controller(configController::class)->group(function () {
     Route::get('/{kitchen}/config',                  'index');
     Route::post('/{kitchen}/config',                 'update');
 });
-Route::controller(saleController::class)->group(function (){
+Route::controller(saleController::class)->group(function () {
     Route::get('/{kitchen}/sales',                  'index');
     Route::post('/{kitchen}/sale',                  'store');
 });
-Route::controller(kitchenController::class)->group(function (){
+Route::controller(kitchenController::class)->group(function () {
     Route::get('/{kitchen}/kitchen',                'index');
     Route::get('/{kitchen}/kitchen/{id}',           'show');
     Route::put('/{kitchen}/kitchen/{id}',           'update');
 });
-Route::controller(deliveryController::class)->group(function (){
+Route::controller(deliveryController::class)->group(function () {
     Route::get('/{kitchen}/deliverys',              'index');
     Route::get('/{kitchen}/delivery/{id}',          'show');
     Route::post('/{kitchen}/delivery',               'update');
 });
-Route::controller(bannerController::class)->group(function (){
+Route::controller(bannerController::class)->group(function () {
     Route::get('/{kitchen}/banners',                'index');
     Route::post('/{kitchen}/bannerC',               'store');
     Route::get('/{kitchen}/banner/{id}',            'show');
     Route::post('/{kitchen}/bannerE/{id}',          'update');
     Route::delete('/{kitchen}/banner/{id}',         'destroy');
 });
-Route::controller(categoryController::class)->group(function (){
+Route::controller(categoryController::class)->group(function () {
     Route::get('/{kitchen}/categorys',              'index');
     Route::post('/{kitchen}/categoryC',             'store');
     Route::get('/{kitchen}/category/{id}',          'show');
     Route::post('/{kitchen}/categoryE/{id}',        'update');
     Route::delete('/{kitchen}/category/{id}',       'destroy');
 });
-Route::controller(typeServiceController::class)->group(function (){
+Route::controller(typeServiceController::class)->group(function () {
     Route::get('/{kitchen}/typeS',                  'index');
     Route::post('/{kitchen}/type',                  'store');
     Route::get('/{kitchen}/type/{id}',              'show');
     Route::put('/{kitchen}/type/{id}',              'update');
     Route::delete('/{kitchen}/type/{id}',           'destroy');
 });
-Route::controller(loginController::class)->group(function (){
+Route::controller(loginController::class)->group(function () {
     Route::post('/login',                           'login');
     Route::post('/register',                        'register');
-    Route::post('/{kitchen}/logout',                'logout');
+    Route::post('/{kitchen}/logout/{id}',                'logout');
     Route::get('/user',                             'user')->middleware('auth:sanctum');
 })->withoutMiddleware(['csrf']);
-Route::controller(productController::class)->group(function (){
+Route::controller(productController::class)->group(function () {
     Route::get('/{kitchen}/products',               'index');
     Route::get('/{kitchen}/productsAll',            'productsAll');
     Route::post('/{kitchen}/product',               'store');

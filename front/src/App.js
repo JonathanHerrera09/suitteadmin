@@ -24,6 +24,7 @@ import Config from './components/config/Config';
 import Categorys from './components/category/Category';
 import CategoryC from './components/category/create/CategoryC';
 import CategoryE from './components/category/edit/CategoryE';
+import Register from './components/register/Register';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importa los estilos de Bootstrap
 import 'bootstrap';
 
@@ -59,6 +60,7 @@ function App() {
           <Route path='/:kitchen/categoryE/:id' element={ <CategoryE/> } />
           <Route path='/:kitchen/config' element={ <Config/> } />
           <Route path='/Login' element={ <Login/> } />
+          <Route path='/Register' element={ <Register/> } />
         </Routes>
       </BrowserRouter>
       

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Models\Login;
 use App\Models\User;
+use App\Helpers\DatabaseHelper;
 
 class loginController extends Controller
 {
@@ -71,6 +72,7 @@ class loginController extends Controller
     }
     public function logout($kitchen)
     {
+        /* print_r($kitchen); */
         $bd_account = DatabaseHelper::ConnectMaster($kitchen);
         DatabaseHelper::Connect($bd_account);
 

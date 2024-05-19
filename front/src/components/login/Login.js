@@ -73,6 +73,7 @@ const Login = () => {
           <button type="submit" className="btn btn-outline-light btn-custom-width">
             Entrar
           </button>
+            <a href='/register'><h5>Registarme</h5></a>
         </form>
       </div>
     </div>

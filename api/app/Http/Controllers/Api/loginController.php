@@ -13,9 +13,19 @@ use Illuminate\Http\Request;
 use App\Models\Login;
 use App\Models\User;
 use App\Helpers\DatabaseHelper;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Auth as FirebaseAuth;
 
 class loginController extends Controller
 {
+    protected $firebaseAuth;
+
+    public function __construct()
+    {
+        /* $firebase = (new Factory)->withServiceAccount(config('firebase.credentials.file'));
+        $this->firebaseAuth = $firebase->createAuth(); */
+    }
+
     public function register(Request $request)
     {
         $user = User::create([
@@ -25,6 +35,30 @@ class loginController extends Controller
             'password' => Hash::make($request->input('password')),
         ]);
         return $user;
+    }
+    public function registerWithGoogle(Request $request)
+    {
+        $token = $request->bearerToken();
+
+        if (!$token) {
+            return response()->json(['message' => 'Token no proporcionado'], 401);
+        }
+
+        try {
+            $verifiedIdToken = $this->firebaseAuth->verifyIdToken($token);
+            $firebaseUserId = $verifiedIdToken->claims()->get('sub');
+
+            $firebaseUser = $this->firebaseAuth->getUser($firebaseUserId);
+
+            $user = User::updateOrCreate(
+                ['email' => $firebaseUser->email],
+                ['name' => $firebaseUser->displayName, 'firebase_uid' => $firebaseUserId]
+            );
+
+            return response()->json(['message' => 'Registro exitoso', 'user' => $user], 201);
+        } catch (\Kreait\Firebase\Exception\Auth\FailedToVerifyToken $e) {
+            return response()->json(['message' => 'Token inválido'], 401);
+        }
     }
     public function login(Request $request)
     {
@@ -61,7 +95,7 @@ class loginController extends Controller
                 'message' => $token,
                 'kitchen' => $account->kitchen
             ])->withCookie($cookie);
-            /*  return response()->json(['message' => 'Login exitoso'], 200); */
+            return response()->json(['message' => 'Login exitoso'], 200);
         } else {
             return response()->json(['message' => 'Credenciales inválidas'], 401);
         }

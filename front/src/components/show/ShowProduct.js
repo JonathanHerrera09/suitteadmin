@@ -1,142 +1,195 @@
-import React, { useEffect, useState} from 'react'
-import axios from 'axios'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './ShowOrder.css';
 import Navbar from '../navbar/navbar';
-import {Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom';
 import { Modal } from 'bootstrap';
-const endpoint ='http://localhost:8000/api';
-const endpoint2 ='http://localhost:8000/assets/';
-/* const endpoint ='https://7fa4-190-108-77-184.ngrok-free.app/api';
-const endpoint2 ='https://7fa4-190-108-77-184.ngrok-free.app/assets/'; */
+
+const endpoint = 'http://localhost:8000/api';
+const endpoint2 = 'http://localhost:8000/assets/';
 
 const ShowProduct = () => {
-    const [products, setProducts] = useState( [] );
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const location = useLocation();
-    const segment = location.pathname.split('/')[1];
-    const kitchenLink = `/${segment}`;
-    
-    const headers = {
-        'Content-Type': 'application/json',
-    };
-    const credentials = {
-        withCredentials: true
-    };
-    const getAllProducts = async() =>{
-       const resp = await axios.get(`${endpoint}${kitchenLink}/products`, {
-        headers: headers,
-        ...credentials
-      });
-       setProducts(resp.data.orders)
+  const [products, setProducts] = useState([]);
+  const [selectedIdsString, setSelectedIdsString] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
+  const [statusOptions, setStatusOptions] = useState([]);
+  const [checkedProducts, setCheckedProducts] = useState({})
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [filter, setFilter] = useState('');
+  const location = useLocation();
+  const segment = location.pathname.split('/')[1];
+  const kitchenLink = `/${segment}`;
+
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  const credentials = {
+    withCredentials: true,
+  };
+
+  const getAllProducts = async () => {
+    const resp = await axios.get(`${endpoint}${kitchenLink}/products`, {
+      headers: headers,
+      ...credentials,
+    });
+    setProducts(resp.data.orders);
+    setFilteredProducts(resp.data.orders);
+  };
+
+  const deleteProducts = async (id) => {
+    await axios.delete(`${endpoint}${kitchenLink}/product/${id}`, {
+      headers: headers,
+      ...credentials,
+    });
+    getAllProducts();
+  };
+  const handleModalChagenClick = async () => {
+    try {
+      const response = await axios.get(`${endpoint}${kitchenLink}/consultStatusC/`);
+      setStatusOptions(response.data);
+      const myModal = new Modal(document.getElementById('changeModal'));
+      myModal.show();
+    } catch (error) {
+        console.error("There was an error fetching the PDF!", error);
     }
-    const deleteProducts = async(id) =>{
-        await axios.delete(`${endpoint}${kitchenLink}/product/${id}`, {
-            headers: headers,
-            ...credentials
-        });
-        getAllProducts()
-    }
-    const openModal = (product) => {
+  };
+  const openModal = (product) => {
+    product.products = JSON.parse(product.products);
+    setSelectedProduct(product);
+    const myModal = new Modal(document.getElementById('exampleModal'));
+    myModal.show();
+  };
+  const openModalFact = async (product) => {
+    try {
+        const response = await axios.get(`${endpoint}${kitchenLink}/exportPDF/${product.id}`);
+        const pdfUrl = `${endpoint2}exports/${response.data.filename}`;
+        const myModal = new Modal(document.getElementById('factModal'));
+        myModal.show();
+        const pdfIframe = document.getElementById('pdfIframe');
+        pdfIframe.src = pdfUrl;
         
-        product.products =JSON.parse(product.products);
-        /* console.log(product.products); */
-        setSelectedProduct(product);
-        const myModal = new Modal(document.getElementById('exampleModal')); // Inicializa la modal
-        myModal.show(); // Muestra la modal
+    } catch (error) {
+        console.error("There was an error fetching the PDF!", error);
     }
-    const exportToExcel = (startDate, endDate) => {
-        // Realizar la solicitud HTTP al backend
-        axios.post(`${endpoint}${kitchenLink}/exportSales`, {
-            start_date: startDate,
-            end_date: endDate
-        }, {
-            headers: headers,
-            withCredentials: true, // Incluir las credenciales en la solicitud
-            responseType: 'blob' // Para indicar que esperamos un archivo binario (Excel)
-        })
-        .then(response => {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'sales.xlsx');
-            document.body.appendChild(link);
-            link.click();
-        })
-        .catch(error => {
-            console.error('Error al exportar a Excel:', error);
-        });
-    };
-    const handleExportClick = () => {
-        // Obtener las fechas seleccionadas por el usuario (puedes obtenerlas de tus estados de React)
-        const startDate = '2023-03-01'; // Ejemplo: Obtener la fecha de inicio
-        const endDate = '2024-03-31'; // Ejemplo: Obtener la fecha de fin
-    
-        // Llamar a la función de exportación
-        exportToExcel(startDate, endDate);
-    };
-    useEffect(() => {
-        const pathnameWithoutSlash = location.pathname.substring(1);
-        const kitchen = localStorage.getItem('kitchen');
-        if (pathnameWithoutSlash !==kitchen) {
-            window.location.href = '/login';
-        } else {
-            getAllProducts();
-        }
-    },[]);
-    /* useEffect (()=>{
-        getAllProducts()   
-    },[]) */
+  };
+  const handleStatusChange = (event) => {
+    setSelectedStatus(event.target.value);
+  };
+  const handleAcceptClick = async () => {
+    const selectedIds = Object.keys(checkedProducts).filter(id => checkedProducts[id]);
+    try {
+      await axios.post(`${endpoint}${kitchenLink}/updateStatus`, {
+        ids: selectedIds,
+        status: selectedStatus
+      });
+      getAllProducts();
+      const myModalElement = document.getElementById('changeModal');
+      const myModal = Modal.getInstance(myModalElement);
+      myModal.hide();
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
+  };
+  const handleFilterClick = (status) => {
+    setFilter(status);
+    setFilteredProducts(products.filter((product) => product.status_name === status));
+  };
+
+  const clearFilter = () => {
+    setFilter('');
+    setFilteredProducts(products);
+  };
+  const handleCheckboxChange = (productId) => {
+    setCheckedProducts(prevState => ({
+      ...prevState,
+      [productId]: !prevState[productId]
+    }));
+  };
+  const isAnyChecked = Object.values(checkedProducts).some(checked => checked);
+  useEffect(() => {
+    const pathnameWithoutSlash = location.pathname.substring(1);
+    const kitchen = localStorage.getItem('kitchen');
+    if (pathnameWithoutSlash !== kitchen) {
+      window.location.href = '/login';
+    } else {
+      getAllProducts();
+    }
+  }, []);
+
   return (
-    <div>  
-        <div className='titleC'>
-                Ordenes
+    <div className="container mt-5">
+      <div className='titleC'>Ordenes</div>
+      <div className='filter-buttons-container'>
+        <div className='filter-buttons'>
+            <button onClick={() => handleModalChagenClick('')} className={`btn ${filter === 'Pendiente' ? 'btn-success' : 'btn-secondary'}`} disabled={!isAnyChecked}>Cambio de Estado</button>
+            <button onClick={() => handleFilterClick('Pendiente')} className={`btn ${filter === 'Pendiente' ? 'btn-success' : 'btn-secondary'}`}>Pendientes</button>
+            <button onClick={() => handleFilterClick('Pagado')} className={`btn ${filter === 'Pagado' ? 'btn-success' : 'btn-secondary'}`}>Pagados</button>
+            <button onClick={() => handleFilterClick('Cancelado')} className={`btn ${filter === 'Cancelado' ? 'btn-success' : 'btn-secondary'}`}>Cancelados</button>
+            <button onClick={clearFilter} className="btn btn-secondary">Limpiar Filtro</button>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-evenly', marginBottom: '20px' }}>
-            <div>
-                <input type="date" />
+    </div>
+      <div className="cards-container2">
+        {filteredProducts.map((product) => (
+          <div key={product.id} className='card2 '>
+            <div className='card-body2 '>
+              <div className='card-actions'>
+                <Link to={`${kitchenLink}/edit/${product.id}`}>
+                  <i className="fas fa-pencil-alt"></i>
+                </Link>
+                  <i onClick={() => deleteProducts(product.id)} className="fas fa-trash-alt"></i>
+                  <i onClick={() => openModal(product)} className="fas fa-eye"></i>
+                  <i onClick={() => openModalFact(product)} className="fas fa-file"></i>
+                  <input
+                    type="checkbox"
+                    checked={checkedProducts[product.id] || false}
+                    onChange={() => handleCheckboxChange(product.id)}
+                  />
+              </div>
+              <p>ID: {product.id}</p>
+              <p>Mesa o domicilio: {product.type_service_name}</p>
+              <p>Valor a pagar: {product.price}</p>
+              <p>Estado: {product.status_name}</p>
             </div>
-            <div>
-                <input type="date" />
+          </div>
+        ))}
+      </div>
+      <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-scrollable">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLabel">Detalles del Producto</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div>
-                <button onClick={handleExportClick} className="btn btn-success">Exportar Excel</button>
+            <div className="modal-body" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', overflowX: 'auto' }}>
+              {selectedProduct && (
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <p>ID: {selectedProduct.id}</p>
+                  <p>Mesa o domicilio: {selectedProduct.type_service_name}</p>
+                  <p>Valor a pagar: {selectedProduct.price}</p>
+                  <p>Estado: {selectedProduct.status_name}</p>
+                  <p>Productos:</p>
+                </div>
+              )}
+              {selectedProduct && selectedProduct.products && Array.isArray(selectedProduct.products) ? (
+                selectedProduct.products.map((product) => (
+                  <div key={product.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <img src={`${endpoint2}${product.img}`} alt={product.name} style={{ width: '100px', height: 'auto' }} />
+                    <p>Nombre: {product.name}</p>
+                    <p>Precio: {product.price}</p>
+                  </div>
+                ))
+              ) : (
+                <p>No hay productos disponibles</p>
+              )}
             </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
         </div>
-        <div className="table-container">           
-            <table className='table table-striped'>
-                <thead className='table-bordered bg-primary text-white'>
-                    <tr>
-                        <th>Acciones</th>
-                        <th>Id</th>
-                        <th>Mesa o domicilio</th>
-                        <th>Valor a pagar</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {products.map((product)=>(
-                        <tr key={product.id}>
-                            <td className='iniA'>
-                                <Link to={`${kitchenLink}/edit/${product.id}`}>
-                                    <i className="fas fa-pencil-alt"></i>
-                                </Link>
-                                {/* <button onClick={() => deleteProducts(product.id)} className='btn btn-danger'> */}
-                                    &nbsp;&nbsp;<i onClick={() => deleteProducts(product.id)} className="fas fa-trash-alt"></i>&nbsp;&nbsp;
-                               {/*  </button> */}
-                               {/*  <button  className='btn btn-info'> */}
-                                        <i onClick={() => openModal(product)} className="fas fa-eye"></i>
-                               {/*  </button> */}
-                            </td>
-                            <td>{product.id}</td>
-                            <td>{product.type_service_name}</td>
-                            <td>{product.price}</td>
-                            <td>{product.status_name}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      </div>
+      <div className="modal fade" id="factModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div className="modal-dialog modal-dialog-scrollable">
                 <div className="modal-content">
                     <div className="modal-header">
@@ -144,37 +197,40 @@ const ShowProduct = () => {
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', overflowX: 'auto' }}>
-                        {selectedProduct && (
-                            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                <p>ID: {selectedProduct.id}</p>
-                                <p>Mesa o domicilio: {selectedProduct.type_service_name}</p>
-                                <p>Valor a pagar: {selectedProduct.price}</p>
-                                <p>Estado: {selectedProduct.status_name}</p>
-                                <p>Productos:</p>
-                            </div>
-                        )}
-                        {selectedProduct && selectedProduct.products && Array.isArray(selectedProduct.products) ? (
-                            selectedProduct.products.map((product) => (
-                                <div key={product.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <img src={`${endpoint2}${product.img}`} alt={product.name} style={{ width: '100px', height: 'auto' }} />
-                                    <p>Nombre: {product.name}</p>
-                                    <p>Precio: {product.price}</p>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No hay productos disponibles</p>
-                        )}
-                        
+                        <div id="pdfContainer" style={{ width: '100%', height: '500px' }}>
+                            <iframe id="pdfIframe" src="" style={{width: '100%', height: '100%', border: 'none'}}></iframe>
+                        </div>
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
-        </div>
-        <Navbar/>
+      </div>
+      <div className="modal fade" id="changeModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div className="modal-dialog modal-dialog-scrollable">
+              <div className="modal-content">
+                  <div className="modal-header">
+                      <h5 className="modal-title" id="exampleModalLabel">Cambiar de estado</h5>
+                      <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div className="modal-body" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', overflowX: 'auto' }}>
+                    <select className="form-select" value={selectedStatus} onChange={handleStatusChange}>
+                      <option value="">Seleccione un estado</option>
+                      {statusOptions.map(option => (
+                        <option key={option.id} value={option.id}>{option.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" className="btn btn-primary" onClick={handleAcceptClick}>Aceptar</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <Navbar />
     </div>
-  )
-}
-
-export default ShowProduct
+  );
+};
+export default ShowProduct;

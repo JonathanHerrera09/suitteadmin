@@ -1,66 +1,156 @@
-/* Estilos para el contenedor de la tabla */
-.table-container {
-    margin: 50px;
-  }
+.titleC {
+  margin: 0px;
+  font-size: 50px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.custom-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px; /* Reducimos el margen inferior */
+}
+
+.custom-container > div {
+  flex: 1; /* Hace que los elementos se expandan para ocupar el espacio disponible */
+  margin-right: 5px; /* Reducimos el margen entre elementos */
+}
+
+.custom-container > div:last-child {
+  margin-right: 0; /* Eliminamos el margen derecho del último elemento */
+}
+
+.custom-container button {
+  padding: 5px 10px; /* Reducimos el padding del botón para que sea más pequeño */
+  font-size: 12px; /* Reducimos el tamaño de fuente del botón */
+}
+
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filter-buttons .btn {
+  margin: 0 10px;
+}
+.filter-buttons-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.filter-buttons {
+  display: inline-block;
+}
+.cards-container2 {
+  padding-bottom: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.card2 {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 200px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
+}
+
+.card-body2 {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.card-actions .fas {
+  cursor: pointer;
+  margin: 0 5px;
+  font-size: 1rem;
+}
+
+.fa-pencil-alt {
+  color: #ff6811;
+}
+
+.fa-trash-alt {
+  color: #ff6811;
+}
+
+.fa-eye {
+  color: #ff6811;
+}
+.fa-file {
+  color: #ff6811;
+}
+.colorAc{
+  background-color: #ff6811;
+}
+.modal-body {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  overflow-x: auto;
+}
+
+.modal-body > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-body img {
+  width: 100px;
+  height: auto;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+}
+@media (max-width: 768px) {
   .titleC {
-    margin: 0px;
-    font-size: 50px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 30px;
   }
-  /* Estilos para la tabla */
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
+
+  .filterButtons {
+    flex-direction: column;
+    align-items: center;
   }
-  
-  /* Estilos para las celdas de la tabla */
-  .table th,
-  .table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+
+  .filterButtons .btn {
+    margin: 5px 0;
   }
-  
-  /* Estilos para la fila de encabezado */
-  .table thead th {
-    background-color: #343a40;
-    color: white;
-    font-weight: bold;
+
+  .cards-container2 {
+    gap: 10px;
+    justify-content: center;
   }
-  
-  /* Estilos para las filas impares */
-  .table tbody tr:nth-child(odd) {
-    background-color: #f2f2f2;
+
+  .card2 {
+    width: 200px;
+    flex: 0 0 auto;
+    width: 45%;
   }
-  
-  /* Estilos para los botones de acción */
-  .btn {
-    padding: 6px 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
+
+  .cardBody {
+    align-items: center;
   }
-  
-  .btn-warning {
-    background-color: #ffc107;
-    color: #212529;
+
+  .cardActions {
+    justify-content: center;
   }
-  
-  .btn-danger {
-    background-color: #dc3545;
-    color: white;
+
+  .cardActions .fas {
+    font-size: 1.2rem;
   }
-  
-  .btn:hover {
-    opacity: 0.8;
-  }
-  .fa-pencil-alt {
-    color: #ff6811;
-  }
-  .fa-trash-alt {
-    color: #ff6811;
-  }
-  .fa-eye{
-    color: #ff6811;
-  }
+}

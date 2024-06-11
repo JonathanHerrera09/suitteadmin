@@ -104,9 +104,11 @@ const CreateProduct = () => {
         var elimTotalPrice = productPrice * productQuantity;
         setSelectedProducts(prevSelectedProducts => {
             const updatedProducts = [...prevSelectedProducts];
-            const deletedProduct = updatedProducts.splice(index, 1)[0];            
+            const deletedProduct = updatedProducts.splice(index, 1)[0];     
+            setNumberCart(updatedProducts.length);       
             return updatedProducts;
         });
+        
         setTotalPrice(prevTotalPrice => prevTotalPrice - elimTotalPrice);
     };
     const handleQuantityChange = (index, event) => {
@@ -153,7 +155,7 @@ const CreateProduct = () => {
     };
     return (
         
-        <div>
+        <div className="container mt-5">
             <h3> Crear Orden</h3>
             <div className="table-container saveb">
                 <form onSubmit={store}>
@@ -204,9 +206,10 @@ const CreateProduct = () => {
                             </div>
                         </div>
                     </div>
+                    
                     <div className="cart-icon" onClick={toggleSidebar}>
                         <i className="fas fa-truck"></i>
-                        <span className="top-cart-number">{numbercart}</span>
+                        {<span className="top-cart-number">{numbercart}</span>}
                     </div>
                     {isSidebarOpen && (
                         <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>

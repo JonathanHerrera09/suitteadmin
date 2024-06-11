@@ -66,6 +66,7 @@ Route::controller(typeServiceController::class)->group(function () {
 });
 Route::controller(loginController::class)->group(function () {
     Route::post('/login',                           'login');
+    Route::post('/registerWgoogle',             'registerWithGoogle');
     Route::post('/register',                        'register');
     Route::post('/{kitchen}/logout/{id}',                'logout');
     Route::get('/user',                             'user')->middleware('auth:sanctum');
@@ -81,5 +82,8 @@ Route::controller(productController::class)->group(function () {
     Route::post('/{kitchen}/productup/{id}',        'updateProd');
     Route::delete('/{kitchen}/product/{id}',        'destroy');
     Route::delete('/{kitchen}/productdel/{id}',     'productdel');
+    Route::get('/{kitchen}/exportPDF/{id}',         'exportPDF');
+    Route::get('/{kitchen}/consultStatusC',         'consultStatusC');
+    Route::post('/{kitchen}/updateStatus',         'updateStatus');
     Route::post('/{kitchen}/exportSales',           'exportSales');
 })->withoutMiddleware(['csrf']);

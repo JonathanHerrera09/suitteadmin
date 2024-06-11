@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Modal } from 'bootstrap';
 import './EditO.css';
 import Navbar from '../navbar/navbar';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
@@ -27,6 +28,8 @@ const EditProduct = () => {
         withCredentials: true
     };
     const [description, setDescription] = useState('');
+    const [numbercart, setNumberCart] = useState(0);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [tipoServicio, setTipoServicio] = useState([]);
     const [selectedTipoServicio, setSelectedTipoServicio] = useState('');
     const [totalPrice, setTotalPrice] = useState(0);
@@ -52,6 +55,39 @@ const EditProduct = () => {
         });
         navigate(`${kitchenLink}`);
     };
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+    const handleIncrement = (index) => {
+        setSelectedProducts(prevSelectedProducts => {
+            const updatedProducts = prevSelectedProducts.map((product, i) => {
+                if (i === index) {
+                    return {
+                        ...product,
+                        quantity: product.quantity + 1
+                    };
+                }
+                return product;
+            });
+            setTotalPrice(updatedProducts.reduce((acc, producto) => acc + producto.price * producto.quantity, 0)); // Actualizar el precio total
+            return updatedProducts;
+        });
+    }
+    const handleDecrement = (index) => {
+        setSelectedProducts(prevSelectedProducts => {
+            const updatedProducts = prevSelectedProducts.map((product, i) => {
+                if (i === index && product.quantity > 1) {
+                    return {
+                        ...product,
+                        quantity: product.quantity - 1
+                    };
+                }
+                return product;
+            });
+            setTotalPrice(updatedProducts.reduce((acc, producto) => acc + producto.price * producto.quantity, 0)); // Actualizar el precio total
+            return updatedProducts;
+        });
+    }
     const handleProductClick = (product) => {
         // Convertir el precio a un número antes de agregar el producto
         product.price = parseFloat(product.price);
@@ -80,6 +116,10 @@ const EditProduct = () => {
             setTotalPrice(updatedProducts.reduce((acc, producto) => acc + producto.price * producto.quantity, 0)); // Actualizar el precio total
             return updatedProducts;
         });
+    };
+    const openModal = () => {
+        const myModal = new Modal(document.getElementById('checkmodal'));
+        myModal.show();
     };
     useEffect(() => {
         const getOrderById = async () => {
@@ -112,7 +152,7 @@ const EditProduct = () => {
     }, [searchTerm, products]);
 
     return (
-        <div>
+        <div  className="container mt-5">
             <h3>Editar Producto</h3>
             <div className='table-container'>
                 <form onSubmit={update}>
@@ -150,18 +190,21 @@ const EditProduct = () => {
                         />
                         <div className='resultados-busqueda'>
                             <div className="container text-center">
-                                <div className='d-flex flex-wrap'>
-                                    {searchResults.map(product => (
-                                        <div className='col-3' key={product.id} onClick={() => handleProductClick(product)}>
-                                            <img src={`${endpoint2}${product.img}`} alt={product.name} />
-                                            <p>{product.name}</p>
-                                            <p>{product.price}</p>
-                                        </div>
-                                    ))}
+                                <div className="shop row grid-container gutter-20 has-init-isotope">
+                                    <div className='d-flex flex-wrap'>
+                                        {searchResults.map(product => (
+                                            <div className='col-6 col-md-3 col-sm-6' key={product.id} onClick={() => handleProductClick(product)}>
+                                                <img src={`${endpoint2}${product.img}`} alt={product.name} />
+                                                <p>{product.name}</p>
+                                                <p>{product.price}</p>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div style={{ paddingBottom: '100px' }}></div>
                     {/* <div className='mb-3 saveb'>
                         <label className='form-label'>Cantidad</label>
                         <input  
@@ -171,26 +214,42 @@ const EditProduct = () => {
                             className='form-control'
                         />
                     </div> */}
-                    <div className='prodCot' style={{ display: displayStyle }}>
-                        <div className='centerItems'>
-                            <div className="imgContainer">
+                    <div className="cart-icon" onClick={toggleSidebar}>
+                        <i className="fas fa-truck"></i>
+                        {/* <span className="top-cart-number">{numbercart}</span> */}
+                    </div>
+                    {isSidebarOpen && (
+                        <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+                            <div className="sidebar-footer imgContainer">
                                 {selectedProducts.map((product, index) => (
-                                    <div className='col-2' key={index}>                                
-                                        <img src={`${endpoint2}${product.img}`} alt={product.name} />                                    
-                                        <p>{product.name}</p>
-                                        <p>{product.price}</p>
-                                        <input type="number" min="1" name="cant" value={product.quantity} onChange={(e) => handleQuantityChange(index, e)}></input>
-                                        <button type="button" onClick={() => handleRemoveProduct(index, product.price)}>X</button>
+                                    <div className="sidebar-footer">
+                                        <div className='col-12' key={index}>
+                                            <div className="row g-0">
+                                                <div className="col-md-12 col-12">
+                                                <p>{product.name}</p>
+                                                </div>
+                                                <div className="col-md-6 col-6">
+                                                    <img className="imgbrd" src={`${endpoint2}${product.img}`} alt={product.name}/>
+                                                    <p>{product.price.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}</p>
+                                                    
+                                                </div>
+                                                <div className="col-md-6 col-6">
+                                                    <i className="fas fa-plus" style={{color: "white"}} onClick={() => handleIncrement(index)}></i>
+                                                        <input style={{ color: 'white', borderRadius: '50%', textAlign: 'center'}} type="text" min="1" name="cant" value={product.quantity} onChange={(e) => handleQuantityChange(index, e)} disabled></input>
+                                                    <i className="fas fa-minus" style={{color: "white"}} onClick={() => handleDecrement(index)}></i>
+                                                    <i className="fas fa-times-circle top-0 end-0 m-1 fs-4" onClick={() => handleRemoveProduct(index, product.price, product.quantity)} ></i>
+                                                </div>
+                                            </div>
+                                        </div>  
                                     </div>
                                 ))}
                             </div>
-                            <div className="allBtn" style={{ maxWidth: '20%' }}>
-                            <h4>Total: {totalPrice.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}   </h4>
-                                <button type='submit' className='btn btn-primary'>Guardar</button>
+                            <div className="sidebar-footer-logout">
+                                <h4>Total: {totalPrice.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}   </h4>                    
                             </div>
+                            <button type='submit' className='btn btn-secondary' onClick={openModal} >Confirmar orden</button>
                         </div>
-                    </div>
-
+                    )}
                 </form>
             </div>
             <Navbar/>

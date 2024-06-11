@@ -3,6 +3,7 @@ import './register.css';
 import image50 from '../../assets/50.png';
 import image100 from '../../assets/100.png';
 import image200 from '../../assets/200.png';
+import { auth, provider, signInWithPopup } from '../autentication/firebase';
 
 export default function Register() {
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -13,6 +14,37 @@ export default function Register() {
 
   const handleBackClick = () => {
     setSelectedPlan(null);
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const firebaseToken = await result.user.getIdToken();
+
+      console.log('User signed in: ', result.user);
+
+      // Envía el token de Firebase a tu API backend
+      fetch('http://localhost:8000/api/registerWgoogle', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${firebaseToken}`
+        },
+        body: JSON.stringify({
+          // otros datos si es necesario
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+      
+    } catch (error) {
+      console.error('Error signing in with Google: ', error);
+    }
   };
 
   return (
@@ -107,6 +139,8 @@ export default function Register() {
               </div>
               <button type="submit" className="btn btn-primary">Registrar</button>
             </form>
+            <hr />
+            <button onClick={handleGoogleSignIn} className="btn btn-danger">Registrarse con Google</button>
           </div>
         )}
       </div>

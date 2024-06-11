@@ -22,49 +22,49 @@ html, body {
   animation: slide-up 0.5s ease-out forwards;
 }
 
-.card {
+.cardR {
   border: none;
   border-radius: 50px;
   box-shadow: 0 20px 20px rgba(0,0,0,.1) !important;
   overflow: hidden;
 }
 
-.card-header {
+.card-headerR {
   padding: 50px !important;
   border-radius: 50px;
   color: #ff6811 !important;
   text-align: center;
 }
 
-.card-body {
+.card-bodyR {
   padding: 30px !important;
   text-align: center;
 }
 
-.card-footer {
+.card-footerR {
   padding: 20px !important;
   text-align: center;
 }
 
-.card-price {
+.card-priceR {
   font-size: 2em;
   font-weight: bold;
   margin: 20px 0;
 }
 
-.btn-signup {
+.btn-signupR {
   width: 100%;
   padding: 10px;
   border-radius: 50px;
   font-size: 1em;
   font-weight: bold;
 }
-.btn-registerN{
+.btn-registerNR{
     color: black !important;
     border-color: black !important;
     
 }
-.btn-registerN:hover{
+.btn-registerNR:hover{
   color: #ffffff !important;
   background-color:black !important;;
 }
@@ -118,11 +118,11 @@ hr{
   animation: slide-down 0.5s ease-out forwards;
 }
 
-.form-header {
+.form-headerR {
   display: flex;
   align-items: center;
 }
-.btn-back {
+.btn-backR {
   background-color: #ff6811;
   color: white;
   border: none;
@@ -131,6 +131,6 @@ hr{
   cursor: pointer;
 }
 
-.btn-back:hover {
+.btn-backR:hover {
   background-color: #e65c10;
 }

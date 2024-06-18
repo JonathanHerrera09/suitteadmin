@@ -5,15 +5,23 @@ import { socket } from '../../socket/socket';
 import {Modal, Button } from 'react-bootstrap';
 import {useLocation} from 'react-router-dom'
 import coinSound from '../../assets/audio/coin-sound.mp3';
-
 const endpoint = 'http://localhost:8000/api';
 const endpoint2 ='http://localhost:8000/assets/';
-
-/* const endpoint =process.env.REACT_APP_API_URL;
-const endpoint2 =process.env.REACT_APP_ASSETS_URL+''; */
-
 const audio = new Audio(coinSound);
-
+const Alert = ({ message, type, onClose }) => {
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 2000);
+      return () => clearTimeout(timer);
+    }, [onClose]);
+  
+    return (
+      <div className={`alert alert-${type}`} role="alert">
+        {message}
+      </div>
+    );
+  };
 const Delivery = () => {
     const location = useLocation();
     const segment = location.pathname.split('/')[1];
@@ -33,6 +41,7 @@ const Delivery = () => {
     const credentials = {
         withCredentials: true
     };
+    const [alert, setAlert] = useState(null);
     const [orders, setOrders] = useState([]);
     const [productId, setProductId] = useState();
     const [product, setProduct] = useState();
@@ -116,25 +125,55 @@ const Delivery = () => {
     };
     
     const upcheck = async (valid) => {
-        await axios.post(`${endpoint}${kitchenLink}/delivery`, {           
-            type:0,
-            product:productId
-        },{
-            headers: headers,
-            ...credentials
-        });
+        setShow(false)
+        try {
+            const response = await axios.post(`${endpoint}${kitchenLink}/delivery`, {           
+                type:0,
+                product:productId
+            },{
+                headers: headers,
+                ...credentials
+            });
+            const data = response.data;
+            if (data.type === 1) {
+                setAlert({ message: 'Se actualizo correctamente', type: 'success' });
+                getAllOrder();
+            } else {
+                setAlert({ message: 'Aun hay productos sin estar preparados', type: 'danger' });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setAlert({ message: 'Ocurrió un error', type: 'danger' });
+        }
 
     }
     const upcheck2 = async (valid) => {
-        await axios.post(`${endpoint}${kitchenLink}/delivery`, {           
-            type:1,
-            product:product
-        },{
+        setShow2(false)
+        try {
+            
+          const response = await axios.post(`${endpoint}${kitchenLink}/delivery`, {
+            type: 1,
+            product: product
+          }, {
             headers: headers,
             ...credentials
-        });
-
-    }
+          });
+    
+          const data = response.data;
+          if (data.type === 1) {
+            setAlert({ message: 'Se actualizo correctamente', type: 'success' });
+            getAllOrder();
+          } else {
+            setAlert({ message: 'Aun hay productos sin estar preparados', type: 'danger' });
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          setAlert({ message: 'Ocurrió un error', type: 'danger' });
+        }
+    };
+    const handleAlertClose = () => {
+        setAlert(null);
+    };
     const openModal = (product) => {
         var productcc = JSON.parse(product.products);
         setSelectedProduct(product);
@@ -143,6 +182,7 @@ const Delivery = () => {
     }
     return (
         <div className="container mt-5">
+            {alert && <Alert message={alert.message} type={alert.type} onClose={handleAlertClose} />}
             { !isConnected && <div className="alert alert-danger" role="alert">Desconectado del socket</div>}
             <div className="row">
                 <Modal show={showPermissionMessage} onHide={() => setShowPermissionMessage(false)}>
@@ -170,7 +210,7 @@ const Delivery = () => {
                                             <h5 className="card-title"> {product.type_service_name} - {product.name}</h5>                                            
                                             <br/>
                                             <div className="d-grid gap-2 col-12 mx-auto">
-                                                <button className="btn btn-secondary" onClick={() => modalcheck2(product)}  type="button">Entregado</button>                                                
+                                                <button className="btn btn-secondary" onClick={() => modalcheck2(product)}  type="button">Entregado</button>
                                             </div>
                                         </div>
                                     </div>

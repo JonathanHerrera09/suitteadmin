@@ -247,7 +247,7 @@ const EditProduct = () => {
                             <div className="sidebar-footer-logout">
                                 <h4>Total: {totalPrice.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}   </h4>                    
                             </div>
-                            <button type='submit' className='btn btn-secondary' onClick={openModal} >Confirmar orden</button>
+                            <button type='submit' className='btn btn-secondary'>Confirmar orden</button>
                         </div>
                     )}
                 </form>

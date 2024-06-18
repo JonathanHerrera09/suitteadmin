@@ -31,32 +31,58 @@ const Sale = () => {
     const [address, setAddress] = useState('');
     const [neighborhood, setNeighborhood] = useState('');
     const [paymentMethod, setPaymentMethod] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [formErrors, setFormErrors] = useState({});
     const [comments, setComments] = useState('');
     const location = useLocation();
     const segment = location.pathname.split('/')[1];
     const kitchenLink = `/${segment}`;
-    
+    const validate = () => {
+        const errors = {};
+        if (!fullName) errors.fullName = 'Nombre completo es requerido';
+        if (!phoneNumber) errors.phoneNumber = 'Numero de telefono es requerido';
+        if (!address) errors.address = 'Direccion es requerido';
+        if (!neighborhood) errors.neighborhood = 'Barrio es requerido';
+        if (!paymentMethod) errors.paymentMethod = 'Metodo de pago es requerido';
+        if (!selectedProducts.length) errors.selectedProducts = 'Debes de tener algun producto seleccionado';
+        return errors;
+      };
     const store = async(e) => {
-        e.preventDefault()
-        const order = await axios.post(`${endpoint}${kitchenLink}/sale`,{
-            typeService:1,
-            name: fullName,
-            phone:phoneNumber,
-            address:address,
-            nbh:neighborhood,
-            paymeth:paymentMethod,
-            description: comments, 
-            price: totalPrice, 
-            product:selectedProducts}, {              
-        });
-        socket.emit('create-new-order',
-        order.data
-        )
-        if(order.data){
-            const myModal = new Modal(document.getElementById('confir'));
-            myModal.show();
+        e.preventDefault();
+        const errors = validate();
+        setFormErrors(errors);
+        if (Object.keys(errors).length === 0) {
+            try {
+                const order = await axios.post(`${endpoint}${kitchenLink}/sale`, {
+                    typeService: 1,
+                    name: fullName,
+                    phone: phoneNumber,
+                    address: address,
+                    nbh: neighborhood,
+                    paymeth: paymentMethod,
+                    description: comments,
+                    price: totalPrice,
+                    product: selectedProducts
+                });
+        
+                socket.emit('create-new-order', order.data);
+        
+                if (order.data) {
+                    const myModalElement = document.getElementById('checkmodal');
+                    const myModal2 = Modal.getInstance(myModalElement);
+                    myModal2.hide();
+                    const myModal = new Modal(document.getElementById('confir'));
+                    myModal.show();
+                }
+            } catch (error) {
+                const errorMessage = error.response ? error.response.data.message : 'An error occurred. Please try again.';
+                document.getElementById('errorMessage').innerText = errorMessage;
+                const errorModal = new Modal(document.getElementById('errorModal'));
+                errorModal.show();
+            }
         }
     };
+    
     const getAllProducts = useCallback(async () => {
         try {
             const resp = await axios.get(`${endpoint}${kitchenLink}/sales`);
@@ -297,32 +323,37 @@ const Sale = () => {
                                         <div className="col-6 mb-3">
                                             <label htmlFor="fullName" className="form-label">Nombre completo</label>
                                             <input type="text" className="form-control" id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                                            {formErrors.fullName && <div className="text-danger">{formErrors.fullName}</div>}
                                         </div>
                                         <div className="col-6 mb-3">
                                             <label htmlFor="phoneNumber" className="form-label">Teléfono - WhatsApp</label>
                                             <input type="tel" className="form-control" id="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                                            {formErrors.phoneNumber && <div className="text-danger">{formErrors.phoneNumber}</div>}
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-6 mb-3">
                                             <label htmlFor="address" className="form-label">Dirección</label>
                                             <input type="text" className="form-control" id="address" value={address} onChange={(e) => setAddress(e.target.value)} />
+                                            {formErrors.address && <div className="text-danger">{formErrors.address}</div>}
                                         </div>
                                         <div className="col-6 mb-3">
                                             <label htmlFor="neighborhood" className="form-label">Barrio</label>
                                             <input type="text" className="form-control" id="neighborhood" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} />
+                                            {formErrors.neighborhood && <div className="text-danger">{formErrors.neighborhood}</div>}
                                         </div>
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="paymentMethod" className="form-label">Medio de pago</label>
                                         <input type="text" className="form-control" id="paymentMethod" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} />
+                                        {formErrors.paymentMethod && <div className="text-danger">{formErrors.paymentMethod}</div>}
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="comments" className="form-label">Comentario</label>
                                         <textarea className="form-control" id="comments" rows="3" value={comments} onChange={(e) => setComments(e.target.value)}></textarea>
                                     </div>
                                     <button type="button" style={{ backgroundColor:  color_btn_n}}  className="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="submit" style={{ backgroundColor:  color_btn_p}}  className="btn btn-secondary" data-bs-dismiss="modal">Enviar</button>
+                                    <button type="submit" style={{ backgroundColor:  color_btn_p}}  className="btn btn-secondary">Enviar</button>
                                 </form>
                             </div>
                         </div>
@@ -342,6 +373,38 @@ const Sale = () => {
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                 {/* <button type="button" className="btn btn-primary"  onClick={() => compartirPDF()}>Compartir PDF</button> */}
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="confir" tabIndex="-1" aria-labelledby="confirLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="confirLabel">Confirmation</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            Order created successfully.
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="errorModal" tabIndex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="errorModalLabel">Error</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                         <span id="errorMessage">{errorMessage}</span>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>

@@ -121,7 +121,7 @@ class productController extends Controller
         $this->setup($kitchen);
         $Order = new Order();
         $Order->typeService = $request->typeService;
-        $Order->description = $request->description;
+        $Order->description = $request->description ?? '';
         $Order->price = $request->price;
         $Order->products = json_encode($request->product);
 

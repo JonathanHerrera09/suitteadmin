@@ -3,9 +3,9 @@ import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import './login.css';
 
-const endpoint ='http://localhost:8000/api/login';
+/* const endpoint ='http://localhost:8000/api/login'; */
 /* const endpoint =process.env.REACT_APP_API_URL+'/login'; */
-/* const endpoint ='https://7fa4-190-108-77-184.ngrok-free.app/api/login'; */
+const endpoint ='http://195.35.25.196/api/login';
 
 const Login = () => {
   const [kitchen, setKitchen] = useState('');

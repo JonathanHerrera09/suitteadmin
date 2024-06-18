@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
 use App\Helpers\DatabaseHelper;
 
 use App\Http\Controllers\Controller;
@@ -18,7 +19,7 @@ class saleController extends Controller
 {
     public function setup($kitchen)
     {
-        $bd_account=DatabaseHelper::ConnectMaster($kitchen);
+        $bd_account = DatabaseHelper::ConnectMaster($kitchen);
         DatabaseHelper::Connect($bd_account);
     }
     public function index($kitchen)
@@ -32,24 +33,45 @@ class saleController extends Controller
         $dato['paymenth'] = Paymenth::all();
         return $dato;
     }
-    public function store(Request $request,$kitchen)
+    public function store(Request $request, $kitchen)
     {
         $this->setup($kitchen);
-        $Order = new Order();
-        $Order->name = $request->name;
-        $Order->phone = $request->phone;
-        $Order->address = $request->address;
-        $Order->nbh = $request->nbh;
-        $Order->paymeth = $request->paymeth;
-        $Order->typeService = $request->typeService;
-        $Order->description = $request->description;
-        $Order->price = $request->price;
-        $Order->products = json_encode($request->product); 
 
-        $Order->save();
-      /*   $this->generarPDF($request, $kitchen); */
-        return $Order; 
+        // Validación de los datos del request
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'nbh' => 'required',
+            'paymeth' => 'required',
+            'typeService' => 'required'
+        ]);
+
+        try {
+            // Creación del nuevo pedido
+            $Order = new Order();
+            $Order->name = $request->name;
+            $Order->phone = $request->phone;
+            $Order->address = $request->address;
+            $Order->nbh = $request->nbh;
+            $Order->paymeth = $request->paymeth;
+            $Order->typeService = $request->typeService;
+            $Order->description = $request->description ?? '';
+            $Order->price = $request->price;
+            $Order->products = json_encode($request->product);
+            $Order->save();
+            return response()->json([
+                'message' => 'Orden creadad correctamente',
+                'order' => $Order
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Fallo al crear la compra',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
+
     public function generarPDF(Request $request, $kitchen)
     {
         // Tu código existente aquí...
@@ -75,5 +97,4 @@ class saleController extends Controller
         $pdfOutput = $dompdf->output();
         file_put_contents(public_path('pdfs/1.pdf'), $pdfOutput);
     }
-
 }

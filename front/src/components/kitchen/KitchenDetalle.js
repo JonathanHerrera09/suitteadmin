@@ -76,24 +76,23 @@ const KitchenDetalle = () => {
         <div className="container mt-5">
             <div className='titleC'>Productos {ordersMs.type_service_name}</div>
             <br />
-            <div className="row row-cols-1 row-cols-md-4">
+            <div className="row">
                 {ordersD.map((product, index) => (
                     product.priority === 1 && (
-                        <div key={product.id} className="col" style={{ marginBottom: '1rem', marginRight: '1rem' }}>
-                            <div className="card" style={{ width: '18rem' }}>
-                                <img src={`${endpoint2}${product.img}`} className="card-img-top" alt={product.name} />
-                                <div className="card-body">
-                                    <h5 className="card-title">{product.name}</h5>
-                                    <p className="card-text">Estado: {product.status_name}</p>
-                                    <button onClick={() => modalcheck(product.id)} className='btn btn-success'>
-                                        <i className="fas fa-check"></i>
-                                    </button>
-                                </div>
-                            </div>
+                    <div key={product.id} className="card col-6 col-md-2 mb-4" >
+                        <img src={`${endpoint2}${product.img}`} className="card-img-top" alt={product.name} />
+                        <div className="card-body">
+                            <h5 className="card-title">{product.name}</h5>
+                            <p className="card-text">Estado: {product.status_name}</p>
+                            <button onClick={() => modalcheck(product.id)} className='btn btn-success'>
+                            <i className="fas fa-check"></i>
+                            </button>
                         </div>
+                    </div>
                     )
                 ))}
             </div>
+
             <div className="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">

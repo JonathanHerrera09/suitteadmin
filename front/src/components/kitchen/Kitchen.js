@@ -111,8 +111,9 @@ const Kitchen = () => {
                         <Button variant="primary" onClick={handlePermissionGranted}>Permitir</Button>
                     </Modal.Footer>
                 </Modal>
+                
                 {orders.map(order => (
-                    <div key={order.id} className="col-md-4 mb-4">
+                    <div key={order.id} className="col-6 col-md-4 mb-4">
                         <Link to={`${kitchenLink}/Kitchenedit/${order.id}`} >
                             <div className={`card ${getCardColor(calculateCompletion(order))}`}>                        
                                 <div className="card-body">

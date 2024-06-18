@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ShowOrder.css';
-import Navbar from '../navbar/navbar';
+import Navbar from '../navbar/navbar.js';
 import { Link, useLocation } from 'react-router-dom';
 import { Modal } from 'bootstrap';
 
-const endpoint = 'http://localhost:8000/api';
-const endpoint2 = 'http://localhost:8000/assets/';
+const endpoint = 'http://195.35.25.196/api';
+const endpoint2 = 'http://195.35.25.196/assets/';
+/* const endpoint = 'http://localhost:8000/api';
+const endpoint2 = 'http://localhost:8000/assets/'; */
 
 const ShowProduct = () => {
   const [products, setProducts] = useState([]);
+  const [delId, setdelId] = useState('0');
   const [selectedIdsString, setSelectedIdsString] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [statusOptions, setStatusOptions] = useState([]);
@@ -37,7 +40,18 @@ const ShowProduct = () => {
     setFilteredProducts(resp.data.orders);
   };
 
-  const deleteProducts = async (id) => {
+  const deleteProductsModal = async (id) => {
+    const myModal = new Modal(document.getElementById('delModal'));
+        myModal.show();
+        setdelId(id);
+    /* await axios.delete(`${endpoint}${kitchenLink}/product/${id}`, {
+      headers: headers,
+      ...credentials,
+    });
+    getAllProducts(); */
+  };
+  const deleteOrder= async (id) => {
+    
     await axios.delete(`${endpoint}${kitchenLink}/product/${id}`, {
       headers: headers,
       ...credentials,
@@ -55,11 +69,22 @@ const ShowProduct = () => {
     }
   };
   const openModal = (product) => {
-    product.products = JSON.parse(product.products);
+    const isJson = (string) => {
+        try {
+            JSON.parse(string);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
+    if (isJson(product.products)) {
+        product.products = JSON.parse(product.products);
+    }
     setSelectedProduct(product);
     const myModal = new Modal(document.getElementById('exampleModal'));
     myModal.show();
-  };
+};
+
   const openModalFact = async (product) => {
     try {
         const response = await axios.get(`${endpoint}${kitchenLink}/exportPDF/${product.id}`);
@@ -137,7 +162,7 @@ const ShowProduct = () => {
                 <Link to={`${kitchenLink}/edit/${product.id}`}>
                   <i className="fas fa-pencil-alt"></i>
                 </Link>
-                  <i onClick={() => deleteProducts(product.id)} className="fas fa-trash-alt"></i>
+                  <i onClick={() => deleteProductsModal(product.id)} className="fas fa-trash-alt"></i>
                   <i onClick={() => openModal(product)} className="fas fa-eye"></i>
                   <i onClick={() => openModalFact(product)} className="fas fa-file"></i>
                   <input
@@ -229,6 +254,23 @@ const ShowProduct = () => {
               </div>
           </div>
       </div>
+      <div className="modal fade" id="delModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="exampleModalLabel">Elimiar</h1>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <b>¿Deseas eliminar esta orden?</b>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-danger" data-bs-dismiss="modal">No</button>
+                            <button type="button" className="btn btn-success" data-bs-dismiss="modal" onClick={() => deleteOrder(1)}>Si</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
       <Navbar />
     </div>
   );

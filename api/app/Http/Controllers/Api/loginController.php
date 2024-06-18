@@ -28,6 +28,7 @@ class loginController extends Controller
 
     public function register(Request $request)
     {
+        /* $user = User::all(); */
         $user = User::create([
             'name' => $request->input('name'),
             'user' => $request->input('user'),
@@ -75,7 +76,8 @@ class loginController extends Controller
         $connection = $account->bd_account;
         config(['database.connections.dynamic' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
+            /* 'host' => env('DB_HOST', '127.0.0.1'), */
+            'host' => env('DB_HOST', '195.35.25.196'),
             'port' => env('DB_PORT', '3306'),
             'database' => $connection,
             'username' => 'root',

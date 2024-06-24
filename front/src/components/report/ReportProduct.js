@@ -108,6 +108,7 @@ const ReportProducts = () => {
                         </thead>
                         <tbody>
                             {detays.map((detay) => (
+                                
                                 <tr key={detay.id}>
                                     <td>{detay.id}</td>
                                     <td>{detay.type_service_name}</td>

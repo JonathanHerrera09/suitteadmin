@@ -3,8 +3,12 @@ import Navbar from '../navbar/navbar';
 import React, { useEffect, useState } from 'react';
 import {useLocation, Link} from 'react-router-dom';
 import './banners.css';
-const endpoint ='http://localhost:8000/api';
+/*const endpoint ='http://localhost:8000/api';
 const endpoint2 ='http://localhost:8000/assets/banners/';
+*/
+const endpoint = 'https://admin.tumenuonline.com/api';
+const endpoint2 = 'https://admin.tumenuonline.com/assets/banners/';
+
 /* const endpoint =process.env.REACT_APP_API_URL;
 const endpoint2 =process.env.REACT_APP_ASSETS_URL+'banners/'; */
 

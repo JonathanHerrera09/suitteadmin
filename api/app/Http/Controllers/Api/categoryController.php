@@ -18,6 +18,7 @@ class categoryController extends Controller
     }
     public function index($kitchen)
     {
+	$this->setup($kitchen);
         return Category::all();
     }
     public function store(Request $request, $kitchen)

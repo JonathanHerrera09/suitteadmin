@@ -9,8 +9,11 @@ import "./sale.css";
 /* const endpoint ='http://18.118.226.208/api'; */
 
 const Sale = () => {
-    const endpoint ='http://localhost:8000/api';
+/*    const endpoint ='http://localhost:8000/api';
     const endpoint2 ='http://localhost:8000/assets/';
+*/
+    const endpoint ='https://admin.tumenuonline.com/api';
+    const endpoint2 ='https://admin.tumenuonline.com/assets/';
     const [color_nav, setColor_nav] = useState('');
     const [color_cart, setColor_cart] = useState('');
     const [color_btn_p, setColor_btn_p] = useState('');
@@ -89,7 +92,7 @@ const Sale = () => {
             document.title = resp.data.config.company;
             const favicon = document.querySelector('link[rel="icon"]');
             if (favicon) {
-                const endpoint2 = 'http://localhost:8000/assets/';
+/*                const endpoint2 = 'http://localhost:8000/assets/';*/
                 favicon.href = endpoint2 + 'favicons/' + resp.data.config.favicon;
             }
             setColor_btn_p(resp.data.config.color_btn_p);

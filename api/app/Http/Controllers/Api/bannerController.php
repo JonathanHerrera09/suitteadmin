@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Session;
 
@@ -14,12 +13,13 @@ class bannerController extends Controller
 {
     public function setup($kitchen)
     {
-        $bd_account = DatabaseHelper::ConnectMaster($kitchen);
+        $bd_account=DatabaseHelper::ConnectMaster($kitchen);
         DatabaseHelper::Connect($bd_account);
     }
     public function index($kitchen)
     {
-        $this->setup($kitchen);
+	$this->setup($kitchen);
+
         return Banner::all();
     }
     public function store(Request $request, $kitchen)
@@ -29,7 +29,7 @@ class bannerController extends Controller
         $Banner->name = $request->name;
         if ($request->hasFile('img')) {
             $imagen = $request->file('img');
-            $nombreImagen = $kitchen . '_' . $imagen->getClientOriginalName();
+            $nombreImagen = $kitchen.'_'.$imagen->getClientOriginalName();
             $imagen->move(public_path('assets/banners'), $nombreImagen);
             $Banner->img = $nombreImagen;
         }
@@ -42,13 +42,13 @@ class bannerController extends Controller
         $dato['Banner'] = Banner::find($id);
         return $dato;
     }
-    public function update(Request $request, $kitchen, string $id)
+    public function update(Request $request, $kitchen, string $id )
     {
         $this->setup($kitchen);
         $name = $request->input('name');
         if ($request->hasFile('img')) {
             $img = $request->file('img');
-            $nombreImagen = $kitchen . '_' . $img->getClientOriginalName();
+            $nombreImagen = $kitchen.'_'.$img->getClientOriginalName();
             $img->move(public_path('assets/banners'), $nombreImagen);
         }
         $Banner = Banner::findOrFail($id);

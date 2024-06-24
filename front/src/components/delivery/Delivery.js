@@ -5,8 +5,10 @@ import { socket } from '../../socket/socket';
 import {Modal, Button } from 'react-bootstrap';
 import {useLocation} from 'react-router-dom'
 import coinSound from '../../assets/audio/coin-sound.mp3';
-const endpoint = 'http://localhost:8000/api';
-const endpoint2 ='http://localhost:8000/assets/';
+/*const endpoint = 'http://localhost:8000/api';
+const endpoint2 ='http://localhost:8000/assets/';*/
+const endpoint = 'https://admin.tumenuonline.com/api';
+const endpoint2 = 'https://admin.tumenuonline.com/assets/';
 const audio = new Audio(coinSound);
 const Alert = ({ message, type, onClose }) => {
     useEffect(() => {

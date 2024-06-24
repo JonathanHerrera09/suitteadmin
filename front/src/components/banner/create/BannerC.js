@@ -3,7 +3,9 @@ import Navbar from '../../navbar/navbar';
 import React, { useEffect, useState } from 'react';
 import {useNavigate, useLocation, Link} from 'react-router-dom';
 import '../banners.css';
-const endpoint ='http://localhost:8000/api';
+/*const endpoint ='http://localhost:8000/api';*/
+const endpoint = 'https://admin.tumenuonline.com/api';
+
 /* const endpoint =process.env.REACT_APP_API_URL; */
 
 const BannerC = () => {

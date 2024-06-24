@@ -5,8 +5,8 @@ import Navbar from '../navbar/navbar.js';
 import { Link, useLocation } from 'react-router-dom';
 import { Modal } from 'bootstrap';
 
-const endpoint = 'http://195.35.25.196/api';
-const endpoint2 = 'http://195.35.25.196/assets/';
+const endpoint = 'https://admin.tumenuonline.com/api';
+const endpoint2 = 'https://admin.tumenuonline.com/assets/';
 /* const endpoint = 'http://localhost:8000/api';
 const endpoint2 = 'http://localhost:8000/assets/'; */
 

@@ -7,6 +7,19 @@
     margin-left: 50px;
   }
 }
+.dropdown-menu2 {
+  display: block;
+  position: relative;
+  background-color: #ffffff00;
+  z-index: 1;
+  margin-top: 5px;
+}
+.dropdown-item2 {
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: #000;
+}
 .navbar {
   height: 8%;
   background-color: #ff6811;
@@ -81,3 +94,7 @@
 .sidebarInter-footer-logout {
   margin-top: auto; /* Empuja el footer al fondo del sidebarInter */
 }
+.sidebarInter-footer {
+  position: relative;
+}
+

@@ -125,6 +125,7 @@ const Kitchen = () => {
                         </Link>
                     </div>
                 ))}
+                 <div style={{ paddingBottom: '100px' }}></div>
             </div>
             <Navbar/>
         </div>

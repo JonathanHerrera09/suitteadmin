@@ -194,7 +194,7 @@ const EditProduct = () => {
                                     <div className='d-flex flex-wrap'>
                                         {searchResults.map(product => (
                                             <div className='col-6 col-md-3 col-sm-6' key={product.id} onClick={() => handleProductClick(product)}>
-                                                <img src={`${endpoint2}${product.img}`} alt={product.name} />
+                                                <img className="imgbrd" src={`${endpoint2}${product.img}`} alt={product.name} />
                                                 <p>{product.name}</p>
                                                 <p>{product.price}</p>
                                             </div>

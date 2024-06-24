@@ -6,7 +6,8 @@ const Navbar = () => {
   const location = useLocation();  
   const segment = location.pathname.split('/')[1];
   const kitchenLink = `${segment}`;
-  const endpoint =`http://localhost:8000/api/${kitchenLink}/logout/${kitchenLink}`;
+ /* const endpoint =`http://localhost:8000/api/${kitchenLink}/logout/${kitchenLink}`;*/
+    const endpoint =`https://admin.tumenuonline.com/api/${kitchenLink}/logout/${kitchenLink}`;
   /* console.log(endpoint); */
   /* const endpoint =process.env.REACT_APP_API_URL+'/logout'; */
   const headers = {
@@ -54,16 +55,16 @@ const Navbar = () => {
       <div className="overflow-auto">
         <div className="navbar-menu">
           <div className="navbar-start">
-            <a className="navbar-item" href={`${kitchenLink}`}>
+            <a className="navbar-item" href={`../../${kitchenLink}`}>
               <i className="fas fa-home"></i> Inicio
             </a>
-            <a className="navbar-item" href={`${kitchenLink}/kitchen`}>
+            <a className="navbar-item" href={`../../${kitchenLink}/kitchen`}>
               <i className="fas fa-utensils"></i> Cocina
             </a>
-            <a className="navbar-item" href={`${kitchenLink}/create`}>
+            <a className="navbar-item" href={`../../${kitchenLink}/create`}>
               <i className="fas fa-plus"></i> Agregar
             </a>
-            <a className="navbar-item" href={`${kitchenLink}/delivery`}>
+            <a className="navbar-item" href={`../../${kitchenLink}/delivery`}>
               <i className="fas fa-truck"></i> Entregar
             </a>
             <a className="navbar-item" onClick={toggleSidebar}>
@@ -75,32 +76,32 @@ const Navbar = () => {
       {isSidebarOpen && (
         <div className={`sidebarInter ${isSidebarOpen ? 'sidebarInter-open' : ''}`}>
           <div className="sidebarInter-footer">
-            <a href={`${kitchenLink}/config`}>
+            <a href={`../../${kitchenLink}/config`}>
               <i className="fas fa-user"></i> Perfil
             </a>
           </div>
           <div className="sidebarInter-footer">
-            <a href={`${kitchenLink}/config`}>
+            <a href={`../../${kitchenLink}/config`}>
               <i className="fas fa-users"></i> Usuarios
             </a>
           </div>
           <div className="sidebarInter-footer">
-            <a href={`${kitchenLink}/products`}>
+            <a href={`../../${kitchenLink}/products`}>
               <i className="fas fa-box"></i> Productos
             </a>
           </div>
           <div className="sidebarInter-footer">
-            <a href={`${kitchenLink}/categorys`}>
+            <a href={`../../${kitchenLink}/categorys`}>
               <i className="fas fa-box-open"></i> Categorias
             </a>
           </div>
           <div className="sidebarInter-footer">
-            <a href={`${kitchenLink}/formDelivery`}>
+            <a href={`../../${kitchenLink}/formDelivery`}>
               <i className="fas fa-table"></i> Forma de entregas
             </a>
           </div>
           <div className="sidebarInter-footer">
-            <a href={`${kitchenLink}/banners`}>
+            <a href={`../../${kitchenLink}/banners`}>
               <i className="fas fa-image"></i> Banner cliente
             </a>
           </div>

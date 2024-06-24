@@ -12,11 +12,11 @@ class DatabaseHelper
     {
         Config::set('database.connections.dynamic', [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', '195.35.25.196'),
             'port' => env('DB_PORT', '3306'),
             'database' => $databaseName,
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            'username' => env('DB_USERNAME', 'suitteBD'),
+            'password' => env('DB_PASSWORD', 'P@ssw0rd123.!'),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',

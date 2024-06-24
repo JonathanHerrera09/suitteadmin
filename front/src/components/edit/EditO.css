@@ -19,6 +19,11 @@
     flex-wrap: wrap;
     position: fixed !important;   
 }
+.imgbrd{
+    max-width: 90%;
+    height: 150px;
+    border-radius:50px;
+}
 .centerItems{
     display:flex;
     align-items: center;

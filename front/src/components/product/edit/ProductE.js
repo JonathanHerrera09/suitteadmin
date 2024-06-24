@@ -7,7 +7,9 @@ import '../products.css';
 const endpoint2 =process.env.REACT_APP_ASSETS_URL; */
 
 const ProductE = () => {
-    const endpoint ='http://localhost:8000/api';
+/*    const endpoint ='http://localhost:8000/api';*/
+const endpoint = 'https://admin.tumenuonline.com/api';
+const endpoint2 = 'https://admin.tumenuonline.com/assets/';
     /* const endpoint2 ='http://localhost:8000/assets/'; */
     const navigate = useNavigate();
     const [categorys, setCategory] = useState([]);

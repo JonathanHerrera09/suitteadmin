@@ -6,7 +6,8 @@ import { Modal, Button } from 'react-bootstrap';
 import {Link, useLocation} from 'react-router-dom'
 import coinSound from '../../assets/audio/coin-sound.mp3';
 import "./kitchen.css";
-const endpoint = 'http://localhost:8000/api';
+/* const endpoint = 'http://localhost:8000/api';*/
+const endpoint = 'https://admin.tumenuonline.com/api';
 /* const endpoint =process.env.REACT_APP_API_URL; */
 const audio = new Audio(coinSound);
 
@@ -125,6 +126,7 @@ const Kitchen = () => {
                         </Link>
                     </div>
                 ))}
+		 <div style={{ paddingBottom: '100px' }}></div>
             </div>
             <Navbar/>
         </div>

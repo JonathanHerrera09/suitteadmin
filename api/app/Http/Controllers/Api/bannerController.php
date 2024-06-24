@@ -18,6 +18,8 @@ class bannerController extends Controller
     }
     public function index($kitchen)
     {
+	$this->setup($kitchen);
+
         return Banner::all();
     }
     public function store(Request $request, $kitchen)

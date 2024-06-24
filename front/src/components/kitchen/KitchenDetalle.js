@@ -5,8 +5,11 @@ import { Modal } from 'bootstrap';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import coinSound from '../../assets/audio/coin-sound.mp3';
 
-const endpoint = 'http://localhost:8000/api';
-const endpoint2 ='http://localhost:8000/assets/';
+/*const endpoint = 'http://localhost:8000/api';
+const endpoint2 ='http://localhost:8000/assets/';*/
+const endpoint = 'https://admin.tumenuonline.com/api';
+const endpoint2 = 'https://admin.tumenuonline.com/assets/';
+
 /* const endpoint =process.env.REACT_APP_API_URL;
 const endpoint2 =process.env.REACT_APP_ASSETS_URL; */
 

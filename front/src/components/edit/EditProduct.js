@@ -5,8 +5,10 @@ import './EditO.css';
 import Navbar from '../navbar/navbar';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
-const endpoint = 'http://localhost:8000/api';
-const endpoint2 ='http://localhost:8000/assets/';
+/*const endpoint = 'http://localhost:8000/api';
+const endpoint2 ='http://localhost:8000/assets/';*/
+const endpoint = 'https://admin.tumenuonline.com/api';
+const endpoint2 ='https://admin.tumenuonline.com/assets/';
 /* const endpoint =process.env.REACT_APP_API_URL;
 const endpoint2 =process.env.REACT_APP_ASSETS_URL; */
 
@@ -194,7 +196,7 @@ const EditProduct = () => {
                                     <div className='d-flex flex-wrap'>
                                         {searchResults.map(product => (
                                             <div className='col-6 col-md-3 col-sm-6' key={product.id} onClick={() => handleProductClick(product)}>
-                                                <img src={`${endpoint2}${product.img}`} alt={product.name} />
+                                                <img className="imgbrd" src={`${endpoint2}${product.img}`} alt={product.name} />
                                                 <p>{product.name}</p>
                                                 <p>{product.price}</p>
                                             </div>

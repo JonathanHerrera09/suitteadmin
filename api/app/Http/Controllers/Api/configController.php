@@ -18,12 +18,13 @@ class configController extends Controller
     }
     public function index($kitchen)
     {
+	$this->setup($kitchen);
         return Config::find(1);
     }
     public function update(Request $request, $kitchen)
     {
         $this->setup($kitchen);
-        $id = $request->input('id');
+        $id = 1;
         $Config = Config::findOrFail($id);
         $company = $request->input('company');
         $color_nav = $request->input('color_nav');

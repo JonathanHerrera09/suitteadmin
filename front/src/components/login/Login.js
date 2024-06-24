@@ -5,7 +5,7 @@ import './login.css';
 
 /* const endpoint ='http://localhost:8000/api/login'; */
 /* const endpoint =process.env.REACT_APP_API_URL+'/login'; */
-const endpoint ='http://195.35.25.196/api/login';
+const endpoint ='https://admin.tumenuonline.com/api/login';
 
 const Login = () => {
   const [kitchen, setKitchen] = useState('');

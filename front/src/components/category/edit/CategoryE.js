@@ -3,7 +3,8 @@ import Navbar from '../../navbar/navbar';
 import React, { useEffect, useState } from 'react';
 import {useNavigate,useParams, useLocation, Link} from 'react-router-dom';
 import '../category.css';
-const endpoint ='http://localhost:8000/api';
+/* const endpoint ='http://localhost:8000/api';*/
+const endpoint = 'https://admin.tumenuonline.com/api';
 /* const endpoint =process.env.REACT_APP_API_URL; */
 
 const CategoryE = () => {

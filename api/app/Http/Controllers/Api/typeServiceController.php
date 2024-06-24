@@ -18,6 +18,7 @@ class typeServiceController extends Controller
     }
     public function index($kitchen)
     {
+	$this->setup($kitchen);
         return TypeService::all();
     }
     public function store(Request $request, $kitchen)

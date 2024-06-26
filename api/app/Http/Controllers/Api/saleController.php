@@ -74,7 +74,7 @@ class saleController extends Controller
 
     public function generarPDF(Request $request, $kitchen)
     {
-	$this->setup($kitchen);
+        $this->setup($kitchen);
         // Tu código existente aquí...
 
         // Crear HTML para el PDF

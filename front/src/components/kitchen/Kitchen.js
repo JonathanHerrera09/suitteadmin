@@ -6,7 +6,7 @@ import { Modal, Button } from 'react-bootstrap';
 import {Link, useLocation} from 'react-router-dom'
 import coinSound from '../../assets/audio/coin-sound.mp3';
 import "./kitchen.css";
-/* const endpoint = 'http://localhost:8000/api';*/
+/* const endpoint = 'http://localhost:8000/api'; */
 const endpoint = 'https://admin.tumenuonline.com/api';
 /* const endpoint =process.env.REACT_APP_API_URL; */
 const audio = new Audio(coinSound);
@@ -64,8 +64,7 @@ const Kitchen = () => {
         setShowPermissionMessage(false);
     };
     const handleNewOrder = (data) => {
-
-	const payload = JSON.parse(data);
+	const payload = JSON.parse(data)
         setOrders(prevOrders => [...prevOrders, payload]);
         if (audioPermission) {
             audio.play();
@@ -84,8 +83,9 @@ const Kitchen = () => {
     };
     const calculateCompletion = (order) => {
         const products = JSON.parse(order.products);
+        
         const totalItems = products.length;
-        const completedItems = products.filter(product => product.priority === 2).length; // Filtra los productos con priority 2
+        const completedItems = products.filter(product => product.priority === 2).length;
         return (completedItems / totalItems) * 100;
     };
     const getCardColor = (completion) => {
@@ -121,6 +121,7 @@ const Kitchen = () => {
                             <div className={`card ${getCardColor(calculateCompletion(order))}`}>                        
                                 <div className="card-body">
                                     <h5 className="card-title">{order.type_service_name}</h5>
+                                    <h5 className="card-title">Orden: {order.id}</h5>
                                     <p className="card-text">Total Products: {JSON.parse(order.products).length}</p>
                                     <p className="card-text">Completion: {calculateCompletion(order).toFixed(2)}%</p>
                                 </div>                        

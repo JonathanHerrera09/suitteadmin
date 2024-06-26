@@ -24,6 +24,8 @@ import Categorys from './components/category/Category.js';
 import CategoryC from './components/category/create/CategoryC.js';
 import CategoryE from './components/category/edit/CategoryE.js';
 import Register from './components/register/Register.js';
+import ReportSale from './components/report/ReportSale.js';
+import ReportProducts from './components/report/ReportProduct.js';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importa los estilos de Bootstrap
 import 'bootstrap';
 
@@ -58,6 +60,8 @@ function App() {
           <Route path='/:kitchen/categoryC' element={ <CategoryC/> } />
           <Route path='/:kitchen/categoryE/:id' element={ <CategoryE/> } />
           <Route path='/:kitchen/config' element={ <Config/> } />
+          <Route path='/:kitchen/reports' element={ <ReportSale/> } />
+          <Route path='/:kitchen/reportsp' element={ <ReportProducts/> } />
           <Route path='/Login' element={ <Login/> } />
           <Route path='/Register' element={ <Register/> } />
         </Routes>

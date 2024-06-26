@@ -5,8 +5,8 @@ import { socket } from '../../socket/socket';
 import {Modal, Button } from 'react-bootstrap';
 import {useLocation} from 'react-router-dom'
 import coinSound from '../../assets/audio/coin-sound.mp3';
-/*const endpoint = 'http://localhost:8000/api';
-const endpoint2 ='http://localhost:8000/assets/';*/
+/* const endpoint = 'http://localhost:8000/api';
+const endpoint2 ='http://localhost:8000/assets/'; */
 const endpoint = 'https://admin.tumenuonline.com/api';
 const endpoint2 = 'https://admin.tumenuonline.com/assets/';
 const audio = new Audio(coinSound);
@@ -226,7 +226,8 @@ const Delivery = () => {
                     <div key={`delivery-${orderD.id}-${index}`} className="col-md-4 mb-4" >
                             <div className={`card ${getCardColor(calculateCompletion(orderD))}`}>                        
                                 <div className="card-body">
-                                    <h5 className="card-title">{orderD.type_service_name}</h5>
+                                    <h5 className="card-title">{orderD.type_service_name} </h5>
+                                    <h5 className="card-title">Orden {orderD.id}</h5>
                                     <p className="card-text">Direccion de entrega: {orderD.address}</p>
                                     <p className="card-text">Total Products: {JSON.parse(orderD.products).length}</p>
                                     <div className="d-grid gap-2 col-12 mx-auto">

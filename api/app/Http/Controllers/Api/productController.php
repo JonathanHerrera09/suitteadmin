@@ -107,6 +107,7 @@ class productController extends Controller
         $dato['orders'] = Order::join('type_services', 'orders.typeService', '=', 'type_services.id')
             ->join('status', 'orders.status', '=', 'status.id')
             ->select('orders.*', 'type_services.name as type_service_name', 'status.name as status_name')
+            ->orderBy('orders.id', 'desc')
             ->get();
         $dato['typeService'] = TypeService::all();
         $dato['products'] = Product::all();

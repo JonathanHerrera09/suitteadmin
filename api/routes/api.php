@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\typeServiceController;
 use App\Http\Controllers\Api\bannerController;
 use App\Http\Controllers\Api\configController;
 use App\Http\Controllers\Api\categoryController;
+use App\Http\Controllers\Api\reportController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -64,11 +65,17 @@ Route::controller(typeServiceController::class)->group(function () {
     Route::put('/{kitchen}/type/{id}',              'update');
     Route::delete('/{kitchen}/type/{id}',           'destroy');
 });
+Route::controller(reportController::class)->group(function () {
+    Route::get('/{kitchen}/reports',                'index');
+    Route::get('/{kitchen}/exportar',               'exportar');
+    Route::get('/{kitchen}/reportsP',               'index2');
+    Route::get('/{kitchen}/exportarP',              'exportar2');
+});
 Route::controller(loginController::class)->group(function () {
     Route::post('/login',                           'login');
-    Route::post('/registerWgoogle',             'registerWithGoogle');
+    Route::post('/registerWgoogle',                 'registerWithGoogle');
     Route::post('/register',                        'register');
-    Route::post('/{kitchen}/logout/{id}',                'logout');
+    Route::post('/{kitchen}/logout/{id}',           'logout');
     Route::get('/user',                             'user')->middleware('auth:sanctum');
 })->withoutMiddleware(['csrf']);
 Route::controller(productController::class)->group(function () {

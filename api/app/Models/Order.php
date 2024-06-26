@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    protected $fillable = ['type_service_id', 'description', 'price','products'];
+    protected $fillable = ['type_service_id', 'description', 'price', 'products'];
 
     public function typeService()
     {
@@ -16,15 +17,18 @@ class Order extends Model
     {
         return $this->join('type_services', 'orders.typeService', '=', 'type_services.id')
             ->join('status', 'orders.status', '=', 'status.id')
-            ->select('orders.*', 'type_services.name as type_service_name','status.name as status_name')
-            ->where('orders.status', $status)->get();
+            ->select('orders.*', 'type_services.name as type_service_name', 'status.name as status_name')
+            ->where('orders.status', $status)
+            ->orderBy('orders.id', 'desc')
+            ->get();
     }
     public function getOrderBy(string $id)
     {
         return $this->join('type_services', 'orders.typeService', '=', 'type_services.id')
             ->join('status', 'orders.status', '=', 'status.id')
-            ->select('orders.*', 'type_services.name as type_service_name','status.name as status_name')
-            ->where('orders.id', $id)->first();;
+            ->select('orders.*', 'type_services.name as type_service_name', 'status.name as status_name')
+            ->where('orders.id', $id)
+            ->orderBy('orders.id', 'desc')
+            ->first();;
     }
-   
 }

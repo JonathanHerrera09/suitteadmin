@@ -20,6 +20,7 @@ use App\Models\Order;
 use App\Models\TypeService;
 use App\Models\Category;
 use App\Models\Status;
+use App\Models\Config;
 
 class productController extends Controller
 {
@@ -56,8 +57,11 @@ class productController extends Controller
                 ->where('orders.id', $id)
                 ->select('orders.*', 'type_services.name as type_service_name', 'status.name as status_name')
                 ->firstOrFail();
+	    $config = Config::find(1);
+            $favicon = $config->favicon;
 
-            $pdf = Pdf::loadView('pdf.product', compact('product'));
+	    $pdf = Pdf::loadView('pdf.product', compact('product', 'favicon'));
+            
             $filename = 'product_' . $id . '.pdf';
             $pdf->save(public_path('assets/exports/' . $filename));
 

@@ -64,7 +64,9 @@ const Kitchen = () => {
         setShowPermissionMessage(false);
     };
     const handleNewOrder = (data) => {
-        setOrders(prevOrders => [...prevOrders, data]);
+
+	const payload = JSON.parse(data);
+        setOrders(prevOrders => [...prevOrders, payload]);
         if (audioPermission) {
             audio.play();
         }

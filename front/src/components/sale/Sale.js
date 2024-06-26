@@ -67,8 +67,8 @@ const Sale = () => {
                     price: totalPrice,
                     product: selectedProducts
                 });
-        
-                socket.emit('create-new-order', order.data);
+		
+                socket.emit('create-new-order', JSON.stringify(order.data.order));
         
                 if (order.data) {
                     const myModalElement = document.getElementById('checkmodal');

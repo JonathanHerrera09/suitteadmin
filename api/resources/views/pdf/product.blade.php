@@ -84,7 +84,7 @@
 <body>
     <div class="invoice-box">
         <div class="logo">
-            <img src="{{ public_path('assets/logo.png') }}" alt="Company Logo">
+		<img src="{{ public_path('assets/favicons/' . $favicon) }}" alt="Favicon">
         </div>
         <table cellpadding="0" cellspacing="0">
             <tr class="top">
@@ -108,8 +108,9 @@
                         <tr>
                             <td>
                                 <strong>Cliente:</strong><br>
-                                {{ $product->customer_name }}<br>
-                                {{ $product->customer_address }}
+                                {{ $product->name }}<br>
+                                {{ $product->address }}<br>
+                                {{ $product->nbh }}
                             </td>
                             <td>
                                 <strong>Servicio:</strong><br>
@@ -117,6 +118,11 @@
                                 <strong>Estado:</strong><br>
                                 {{ $product->status_name }}
                             </td>
+			     <td>
+                                <strong>Medio de pago:</strong><br>
+                                {{ $product->paymeth }}<br>
+                             </td>
+
                         </tr>
                     </table>
                 </td>

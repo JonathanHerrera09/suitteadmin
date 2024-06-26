@@ -67,8 +67,9 @@ const Sale = () => {
                     price: totalPrice,
                     product: selectedProducts
                 });
-        
-                socket.emit('create-new-order', order.data);
+                
+                /* console.log(); */
+                socket.emit('create-new-order', JSON.stringify(order.data.order))
         
                 if (order.data) {
                     const myModalElement = document.getElementById('checkmodal');
@@ -178,12 +179,12 @@ const Sale = () => {
             return updatedProducts;
         });
     }
-   /*  const compartirPDF = () => {
-        const pdfURL =` ${endpoint2}pdfs/1.pdf`;
-        const mensaje = "¡Aquí está tu PDF! " + pdfURL;
-        const whatsappURL = "https://api.whatsapp.com/send?text=" + encodeURIComponent(mensaje);
+    const wht = () => {
+        /* const pdfURL =` ${endpoint2}pdfs/1.pdf`;
+        const mensaje = "¡Aquí está tu PDF! " + pdfURL; */
+        const whatsappURL = "https://api.whatsapp.com/send?phone=573126774392&text=Quetal%20%7Bempresa%7D%2C%20acabo%20de%20hacer%20mi%20pedido%2C%20es%20la%20orden%20%7Bnumero%7D";
         window.open(whatsappURL);
-    } */
+    }
     const openModal = () => {
         const myModal = new Modal(document.getElementById('checkmodal'));
         myModal.show();
@@ -237,7 +238,23 @@ const Sale = () => {
                                                     </div>
                                                     <div className="col-md-8 col-8">
                                                         <div className="card-body">
-                                                            <h5 className="card-title" ><span style={{ backgroundColor: config.color_bag_title, border: '1px', borderRadius: '50px', paddingLeft: '20px', paddingRight: '20px', color: config.color_text_title}}><b>{product.name}</b></span></h5>
+                                                            <h5 className="card-title" >
+                                                                <span 
+                                                                    style={{
+                                                                        backgroundColor: config.color_bag_title,
+                                                                        border: '1px solid transparent',
+                                                                        borderRadius: '50px',
+                                                                        paddingLeft: '20px',
+                                                                        paddingRight: '20px',
+                                                                        color: config.color_text_title,
+                                                                        display: 'inline-block',
+                                                                        maxWidth: '100%',
+                                                                        textAlign: 'center',
+                                                                        wordWrap: 'break-word',
+                                                                      }}
+                                                                                ><b>{product.name}</b>
+                                                                </span>
+                                                            </h5>
                                                             <hr/>
                                                             <p className="card-text"><small><b>{product.description}</b></small></p>
                                                             <h5><small style={{ color: color_btn_p }} >
@@ -370,11 +387,12 @@ const Sale = () => {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                <img src="https://media.tenor.com/LLLJYVQJNVAAAAAM/chefs-kiss-french-chef.gif" alt="Chef's kiss gif" />
+                                Tu orden fue creada con exito ayudamos a agilizar tu pedido
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                {/* <button type="button" className="btn btn-primary"  onClick={() => compartirPDF()}>Compartir PDF</button> */}
+                                <button type="button" className="btn btn-primary"  onClick={() => wht()}>Confirmación en WhastApp</button>
+                                <button type="button" className="btn btn-success"  onClick={() => wht()}>Seguir mi pedido</button>
                             </div>
                         </div>
                     </div>

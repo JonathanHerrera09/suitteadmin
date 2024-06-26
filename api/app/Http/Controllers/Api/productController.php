@@ -20,6 +20,7 @@ use App\Models\Order;
 use App\Models\TypeService;
 use App\Models\Category;
 use App\Models\Status;
+use App\Models\Config;
 
 class productController extends Controller
 {
@@ -56,6 +57,7 @@ class productController extends Controller
                 ->where('orders.id', $id)
                 ->select('orders.*', 'type_services.name as type_service_name', 'status.name as status_name')
                 ->firstOrFail();
+            $config = Config::find(1);
 
             $pdf = Pdf::loadView('pdf.product', compact('product'));
             $filename = 'product_' . $id . '.pdf';
@@ -103,6 +105,7 @@ class productController extends Controller
         $dato['orders'] = Order::join('type_services', 'orders.typeService', '=', 'type_services.id')
             ->join('status', 'orders.status', '=', 'status.id')
             ->select('orders.*', 'type_services.name as type_service_name', 'status.name as status_name')
+            ->orderBy('orders.id', 'desc')
             ->get();
         $dato['typeService'] = TypeService::all();
         $dato['products'] = Product::all();

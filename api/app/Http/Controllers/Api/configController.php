@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Session;
 
@@ -13,12 +14,12 @@ class configController extends Controller
 {
     public function setup($kitchen)
     {
-        $bd_account=DatabaseHelper::ConnectMaster($kitchen);
+        $bd_account = DatabaseHelper::ConnectMaster($kitchen);
         DatabaseHelper::Connect($bd_account);
     }
     public function index($kitchen)
     {
-	$this->setup($kitchen);
+        $this->setup($kitchen);
         return Config::find(1);
     }
     public function update(Request $request, $kitchen)
@@ -36,7 +37,7 @@ class configController extends Controller
         $address = $request->input('address');
         $email = $request->input('email');
         $phone = $request->input('phone');
-        $slogan	 = $request->input('slogan');
+        $slogan     = $request->input('slogan');
         $msgfinish = $request->input('msgfinish');
         $color_footer = $request->input('color_footer');
         $color_card = $request->input('color_card');
@@ -44,7 +45,7 @@ class configController extends Controller
         $color_bag_title = $request->input('color_bag_title');
         if ($request->hasFile('favicon')) {
             $img = $request->file('favicon');
-            $nombreImagen = $kitchen.'_'.$img->getClientOriginalName();
+            $nombreImagen = $kitchen . '_' . $img->getClientOriginalName();
             $img->move(public_path('assets/favicons'), $nombreImagen);
             $Config->favicon = $nombreImagen;
         }

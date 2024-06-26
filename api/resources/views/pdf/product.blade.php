@@ -84,7 +84,7 @@
 <body>
     <div class="invoice-box">
         <div class="logo">
-            <img src="{{ public_path('assets/logo.png') }}" alt="Company Logo">
+            <img src="{{ public_path('assets/favicons/' . $logoP) }}" alt="Company Logo">
         </div>
         <table cellpadding="0" cellspacing="0">
             <tr class="top">

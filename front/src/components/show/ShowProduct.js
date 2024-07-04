@@ -6,10 +6,10 @@ import { socket } from '../../socket/socket';
 import { Link, useLocation } from 'react-router-dom';
 import { Modal } from 'bootstrap';
 
-/* const endpoint = 'https://admin.tumenuonline.com/api';
-const endpoint2 = 'https://admin.tumenuonline.com/assets/'; */
-const endpoint = 'http://localhost:8000/api';
-const endpoint2 = 'http://localhost:8000/assets/';
+const endpoint = 'https://admin.tumenuonline.com/api';
+const endpoint2 = 'https://admin.tumenuonline.com/assets/';
+/*const endpoint = 'http://localhost:8000/api';
+const endpoint2 = 'http://localhost:8000/assets/';*/
 
 const ShowProduct = () => {
   const [products, setProducts] = useState([]);

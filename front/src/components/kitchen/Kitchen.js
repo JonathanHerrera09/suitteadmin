@@ -64,16 +64,14 @@ const Kitchen = () => {
         setShowPermissionMessage(false);
     };
     const handleNewOrder = (data) => {
-        
-        const payload = JSON.parse(data);
-        if(payload.pg==kitchenLink){
-            /* setOrders(prevOrders => [...prevOrders, payload]); */
-            setOrders(prevOrders => [payload, ...prevOrders]);
-            if (audioPermission) {
-                audio.play();
-            }
-        }
-        
+	const payload = JSON.parse(data);
+	if(payload.pg==kitchenLink){
+        	/* setOrders(prevOrders => [...prevOrders, payload]); */
+		setOrders(prevOrders => [payload, ...prevOrders]);
+        	if (audioPermission) {
+            		audio.play();
+        	}
+	}
     };
     const getAllOrder = async () => {
         try {

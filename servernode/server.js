@@ -1,12 +1,23 @@
 import { createServer } from "node:http";
 import { Server } from "socket.io";
 import express from "express";
+import cors from "cors";
+
 const app = express();
+
+app.use(cors({
+    origin: "https://tumenuonline.com",
+    methods: "GET,POST,OPTIONS",
+    allowedHeaders: "Origin,X-Requested-With,Content-Type,Accept,Authorization",
+    credentials: true
+}));
 const httpServer = createServer(app);
 const ioServer = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:3000",
-        /* origin: "http://18.118.226.208:3000", */
+        origin: "https://tumenuonline.com", // Permite solicitudes desde este origen
+        methods: ["GET", "POST"],
+        allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
+        credentials: true
     }
 });
 

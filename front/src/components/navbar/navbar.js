@@ -45,11 +45,10 @@ const Navbar = () => {
       console.error('Error al cerrar sesión:', error);
     });
   }
-  const handleDropdownToggle = (e) => {
+const handleDropdownToggle = (e) => {
         e.preventDefault();
         setIsDropdownOpen(!isDropdownOpen);
       };
-    
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -111,7 +110,7 @@ const Navbar = () => {
               <i className="fas fa-image"></i> Banner cliente
             </a>
           </div>
-          <div className="sidebarInter-footer">
+	 <div className="sidebarInter-footer">
             <a onClick={handleDropdownToggle}>
               <i className="fa fa-file-excel-o"></i> Reportes
             </a>

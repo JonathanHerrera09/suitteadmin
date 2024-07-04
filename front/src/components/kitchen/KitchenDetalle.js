@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Navbar from '../navbar/navbar';
+import { socket } from '../../socket/socket';
 import { Modal } from 'bootstrap';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import coinSound from '../../assets/audio/coin-sound.mp3';
 
-/*const endpoint = 'http://localhost:8000/api';
-const endpoint2 ='http://localhost:8000/assets/';*/
+/* const endpoint = 'http://localhost:8000/api';
+const endpoint2 ='http://localhost:8000/assets/'; */
 const endpoint = 'https://admin.tumenuonline.com/api';
 const endpoint2 = 'https://admin.tumenuonline.com/assets/';
 
@@ -57,12 +58,18 @@ const KitchenDetalle = () => {
             }
             return order;
         });
-        await axios.put(`${endpoint}${kitchenLink}/kitchen/${id}`, {           
+        const resp = await axios.put(`${endpoint}${kitchenLink}/kitchen/${id}`, {           
             product:updatedOrders
         },{
             headers: headers,
             ...credentials
         });
+        if(resp.data.status==4){
+            resp.data.status=4;
+            resp.data.pgs=kitchenLink;
+            resp.data.ids=[id];
+            socket.emit('new-status', JSON.stringify(resp.data));
+        }
         setOrdersDeta(updatedOrders);   
         myModal.hide();     
     }
@@ -80,6 +87,7 @@ const KitchenDetalle = () => {
             <div className='titleC'>Productos {ordersMs.type_service_name}</div>
             <br />
             <div className="row">
+                <h4>Comentarios de pedido: {ordersMs.description}</h4>
                 {ordersD.map((product, index) => (
                     product.priority === 1 && (
                     <div key={product.id} className="card col-6 col-md-2 mb-4" >

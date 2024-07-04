@@ -19,8 +19,6 @@ useEffect(() => {
         socket.off('disconnect');
     }
 }, []);
-
-
     return (
         <>
         {orders.map((order, index) => (

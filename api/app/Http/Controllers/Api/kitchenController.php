@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
 use App\Helpers\DatabaseHelper;
 
 use App\Http\Controllers\Controller;
@@ -12,7 +13,7 @@ class kitchenController extends Controller
 {
     public function setup($kitchen)
     {
-        $bd_account=DatabaseHelper::ConnectMaster($kitchen);
+        $bd_account = DatabaseHelper::ConnectMaster($kitchen);
         DatabaseHelper::Connect($bd_account);
     }
     public function index($kitchen, Order $orderModel)
@@ -29,12 +30,26 @@ class kitchenController extends Controller
         $dato['typeService'] = TypeService::all();
         return $dato;
     }
-    public function update(Request $request,$kitchen, string $id)
+    public function update(Request $request, $kitchen, string $id)
     {
         $this->setup($kitchen);
-        $Order = Order::findOrFail($request->id);
-        $Order->products = json_encode($request->product);
-        $Order->save();
-        return $Order;
+        $Order = Order::findOrFail($id);
+        if ($request->product) {
+            $filteredProducts = array_filter($request->product, function ($product) {
+                return $product['priority'] == 2;
+            });
+            if (count($filteredProducts) === count($request->product)) {
+                $Order->products = json_encode($request->product);
+                $Order->status = 4;
+                $dato['type'] = 1;
+                $dato['status'] = 4;
+            } else {
+                $Order->products = json_encode($request->product);
+                $dato['type'] = 1;
+                $dato['status'] = 1;
+            }
+            $Order->save();
+        }
+        return $dato;
     }
 }

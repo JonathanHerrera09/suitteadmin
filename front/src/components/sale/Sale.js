@@ -3,7 +3,9 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { Modal } from 'bootstrap';
 import {socket} from '../../socket/socket';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTruck, faBicycle } from '@fortawesome/free-solid-svg-icons';
+import { FaUtensils, FaTruck, FaCheckCircle } from 'react-icons/fa';
 import "./sale.css";
 
 /* const endpoint ='http://18.118.226.208/api'; */
@@ -12,6 +14,7 @@ const Sale = () => {
 /*    const endpoint ='http://localhost:8000/api';
     const endpoint2 ='http://localhost:8000/assets/';
 */
+    const statuses = ['Preparando', 'En camino', 'Entregado'];  
     const endpoint ='https://admin.tumenuonline.com/api';
     const endpoint2 ='https://admin.tumenuonline.com/assets/';
     const [color_nav, setColor_nav] = useState('');
@@ -21,6 +24,7 @@ const Sale = () => {
     const [config, setConfig] = useState('');
     const [paymenth, setPaymenth] = useState('');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarOpen2, setIsSidebarOpen2] = useState(false);
     const [products, setProducts] = useState([]);
     const [productsAll, setProductsAll] = useState('Productos');
     const [banners, setBanners] = useState([]);
@@ -36,10 +40,17 @@ const Sale = () => {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [formErrors, setFormErrors] = useState({});
+    const [status, setStatus] = useState('Preparando');
+    const [orderSummary, setOrderSummary] = useState(null);
+    const [orderSummaryP, setOrderSummaryP] = useState(null);
+    const [orderId, setOrderId] = useState(null);
     const [comments, setComments] = useState('');
+    const [isConnected, setIsConnected] = useState(socket.connected);
+    const [audioPermission, setAudioPermission] = useState(true);
     const location = useLocation();
     const segment = location.pathname.split('/')[1];
     const kitchenLink = `/${segment}`;
+    
     const validate = () => {
         const errors = {};
         if (!fullName) errors.fullName = 'Nombre completo es requerido';
@@ -67,10 +78,16 @@ const Sale = () => {
                     price: totalPrice,
                     product: selectedProducts
                 });
-                
-                /* console.log(); */
+                order.data.order.pg=kitchenLink;
                 socket.emit('create-new-order', JSON.stringify(order.data.order))
-        
+                sessionStorage.setItem('orderId', order.data.order.id);
+                sessionStorage.setItem('prods', JSON.stringify(selectedProducts));
+                const statusArray = ['Preparando'];
+                sessionStorage.setItem('status',JSON.stringify(statusArray));
+                setOrderSummary(order.data.order);
+                setOrderSummaryP(selectedProducts);
+                setOrderId(order.data.order.id);
+                
                 if (order.data) {
                     const myModalElement = document.getElementById('checkmodal');
                     const myModal2 = Modal.getInstance(myModalElement);
@@ -86,14 +103,12 @@ const Sale = () => {
             }
         }
     };
-    
     const getAllProducts = useCallback(async () => {
         try {
             const resp = await axios.get(`${endpoint}${kitchenLink}/sales`);
             document.title = resp.data.config.company;
             const favicon = document.querySelector('link[rel="icon"]');
             if (favicon) {
-/*                const endpoint2 = 'http://localhost:8000/assets/';*/
                 favicon.href = endpoint2 + 'favicons/' + resp.data.config.favicon;
             }
             setColor_btn_p(resp.data.config.color_btn_p);
@@ -110,9 +125,72 @@ const Sale = () => {
         }
     }, [endpoint, kitchenLink]);
     useEffect(() => {
+        const savedOrderId = sessionStorage.getItem('orderId');
+        const savedOrderP = sessionStorage.getItem('prods');
+        if (savedOrderId) {
+            setOrderSummaryP(JSON.parse(savedOrderP));
+            setOrderId(savedOrderId);
+        }
+        const handleSocketConnection = () => {
+            setIsConnected(socket.connected);
+        };
+        socket.on('connect', handleSocketConnection);
+        socket.on('update-status', handleNewOrder);
         getAllProducts();
     }, [getAllProducts]);
-
+    const handleNewOrder = (data) => {
+        const savedOrderId = sessionStorage.getItem('orderId');
+        const payload = JSON.parse(data);
+        
+        if(payload.pgs==kitchenLink){
+            if (payload.ids.includes(savedOrderId.toString())) {
+                if(payload.status==4){
+                    const statusArray = ['En camino'];
+                    sessionStorage.setItem('status',JSON.stringify(statusArray));
+                    const savedOrderId = sessionStorage.getItem('orderId');
+                    const savedOrderP = sessionStorage.getItem('prods');
+                    if (savedOrderId) {
+                        setOrderSummaryP(JSON.parse(savedOrderP));
+                        setOrderId(savedOrderId);
+                    }
+                    const statuses = statusArray;//Este es el que me va a dar el estado actual que va a tener el movimiento
+                    let index = 0;
+                    const interval = setInterval(() => {
+                    index = (index + 1) % statuses.length;
+                    setStatus(statuses[index]);
+                    }, 2000);
+                    return () => clearInterval(interval);
+                    statusP();
+                }
+                if (payload.status == 5) {
+                    const statusArray = ['Entregado'];
+                    sessionStorage.setItem('status',JSON.stringify(statusArray));
+                    const savedOrderId = sessionStorage.getItem('orderId');
+                    const savedOrderP = sessionStorage.getItem('prods');
+                    if (savedOrderId) {
+                        setOrderSummaryP(JSON.parse(savedOrderP));
+                        setOrderId(savedOrderId);
+                    }
+                    const statuses = statusArray;//Este es el que me va a dar el estado actual que va a tener el movimiento
+                    let index = 0;
+                    const interval = setInterval(() => {
+                    index = (index + 1) % statuses.length;
+                    setStatus(statuses[index]);
+                    }, 2000);
+                    setTimeout(() => {
+                        sessionStorage.removeItem('status');
+                        sessionStorage.removeItem('orderId');
+                        sessionStorage.removeItem('prods');
+                        clearInterval(interval);
+                        getAllProducts();
+                    }, 5000);
+                    return () => clearInterval(interval);
+                }
+                
+            }
+        }
+        
+    }
     const handleCategoryClick = (category) => {
         setProductsAll(category.name);
         setSelectedCategory(category.id);
@@ -182,7 +260,7 @@ const Sale = () => {
     const wht = () => {
         /* const pdfURL =` ${endpoint2}pdfs/1.pdf`;
         const mensaje = "¡Aquí está tu PDF! " + pdfURL; */
-        const whatsappURL = "https://api.whatsapp.com/send?phone=573126774392&text=Quetal%20%7Bempresa%7D%2C%20acabo%20de%20hacer%20mi%20pedido%2C%20es%20la%20orden%20%7Bnumero%7D";
+        const whatsappURL = `https://api.whatsapp.com/send?phone=57${config.phone}&text=Quetal%20%7B${config.company}%7D%2C%20acabo%20de%20hacer%20mi%20pedido%2C%20es%20la%20orden%20%7B${orderId}%7D`;
         window.open(whatsappURL);
     }
     const openModal = () => {
@@ -192,6 +270,50 @@ const Sale = () => {
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
+    const toggleSidebar2 = () => {
+        setIsSidebarOpen2(!isSidebarOpen2);
+        statusP();
+    };
+    const statusP =()=>{
+        var retrievedStatus = ['En camino'];
+        const savedOrderId = sessionStorage.getItem('orderId');
+        const savedOrderP = sessionStorage.getItem('prods');
+        const retrievedStatus2 = JSON.parse(sessionStorage.getItem('status'));
+        
+        if (savedOrderId) {
+            setOrderSummaryP(JSON.parse(savedOrderP));
+            setOrderId(savedOrderId);
+            retrievedStatus = retrievedStatus2;
+        }
+        const statuses = retrievedStatus;
+        let index = 0;
+        const interval = setInterval(() => {
+          index = (index + 1) % statuses.length;
+          setStatus(statuses[index]);
+        }, 2000);
+    
+        return () => clearInterval(interval);
+    }
+    const renderIcon = (status, currentStatus) => {
+        let className = "icon";
+        let color = "gray";
+        if (status === currentStatus) {
+          className += " animate";
+          color = "#ff6711";
+        } else if (statuses.indexOf(status) <= statuses.indexOf(currentStatus)) {
+          color = "#ff6711";
+        }
+        switch (status) {
+          case 'Preparando':
+            return <FaUtensils className={className} style={{ color }} />;
+          case 'En camino':
+            return <FaTruck className={className} style={{ color }} />;
+          case 'Entregado':
+            return <FaCheckCircle className={className} style={{ color }} />;
+          default:
+            return null;
+        }
+      };
     return (
         <div className='container1'>
             <div id="carouselExample" className="carousel slide" data-bs-ride="carousel">
@@ -293,11 +415,42 @@ const Sale = () => {
                         </div>
                     </div>
                 </div>
-
+                {orderId && (
+                <div style={{ backgroundColor:  color_cart}} className="cart-icon2" onClick={toggleSidebar2}>
+                    <FontAwesomeIcon icon={faBicycle} />
+                </div>)}
                 <div style={{ backgroundColor:  color_cart}} className="cart-icon" onClick={toggleSidebar}>
-                    <i className="fas fa-truck"></i>
+                    <FontAwesomeIcon icon={faTruck} />
                     <span style={{ backgroundColor:  color_cart}} className="top-cart-number">{numbercart}</span>
                 </div>
+                {isSidebarOpen2 && (
+                    <div style={{ backgroundColor:  color_nav}} className={`sidebarSales ${isSidebarOpen2 ? 'sidebarSales-open' : ''}`}>
+                        <div className="sidebarSales-footer imgContainer">
+                            <div className="follow-container">
+                                <h4>Seguimiento del Pedido</h4>
+                                <div className="status-container">
+                                    {statuses.map((st, index) => (
+                                    <div key={index} className="status">
+                                        {renderIcon(st, status)}
+                                        <p style={{ color: statuses.indexOf(st) <= statuses.indexOf(status) ? '#ff6711' : 'gray' }}>{st}</p>
+                                    </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="order-summary">
+                                <h5>Resumen del Pedido</h5>
+                                <ul>
+                                {orderSummaryP && orderSummaryP.map((product, index) => (
+                                        <li key={product.id}>
+                                            {product.name} x {product.quantity} - ${product.price * product.quantity}
+                                        </li>
+                                ))}
+                                </ul>
+                                {orderSummary && (<h4>Total: {orderSummary.price}</h4>)}
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {isSidebarOpen && (
                     <div style={{ backgroundColor:  color_nav}} className={`sidebarSales ${isSidebarOpen ? 'sidebarSales-open' : ''}`}>
                         <div className="sidebarSales-footer imgContainer">
@@ -387,12 +540,12 @@ const Sale = () => {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                Tu orden fue creada con exito ayudamos a agilizar tu pedido
+                                Tu orden fue creada con exito ayudamos a agilizar tu pedido # {orderId}
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                 <button type="button" className="btn btn-primary"  onClick={() => wht()}>Confirmación en WhastApp</button>
-                                <button type="button" className="btn btn-success"  onClick={() => wht()}>Seguir mi pedido</button>
+                                {/* <button type="button" className="btn btn-success"  onClick={() => wht()}>Seguir mi pedido</button> */}
                             </div>
                         </div>
                     </div>

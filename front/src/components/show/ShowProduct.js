@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ShowOrder.css';
 import Navbar from '../navbar/navbar.js';
+import { socket } from '../../socket/socket';
 import { Link, useLocation } from 'react-router-dom';
 import { Modal } from 'bootstrap';
 
@@ -104,10 +105,14 @@ const ShowProduct = () => {
   const handleAcceptClick = async () => {
     const selectedIds = Object.keys(checkedProducts).filter(id => checkedProducts[id]);
     try {
-      await axios.post(`${endpoint}${kitchenLink}/updateStatus`, {
+      const order = await axios.post(`${endpoint}${kitchenLink}/updateStatus`, {
         ids: selectedIds,
         status: selectedStatus
       });
+      order.data.status=selectedStatus;
+      order.data.pgs=kitchenLink;
+      order.data.ids=selectedIds;
+      socket.emit('new-status', JSON.stringify(order.data));
       getAllProducts();
       const myModalElement = document.getElementById('changeModal');
       const myModal = Modal.getInstance(myModalElement);
@@ -149,7 +154,9 @@ const ShowProduct = () => {
         <div className='filter-buttons'>
             <button onClick={() => handleModalChagenClick('')} className={`btn ${filter === 'Pendiente' ? 'btn-success' : 'btn-secondary'}`} disabled={!isAnyChecked}>Cambio de Estado</button>
             <button onClick={() => handleFilterClick('Pendiente')} className={`btn ${filter === 'Pendiente' ? 'btn-success' : 'btn-secondary'}`}>Pendientes</button>
+            <button onClick={() => handleFilterClick('Listo')} className={`btn ${filter === 'Listo' ? 'btn-success' : 'btn-secondary'}`}>Listo</button>
             <button onClick={() => handleFilterClick('Pagado')} className={`btn ${filter === 'Pagado' ? 'btn-success' : 'btn-secondary'}`}>Pagados</button>
+            <button onClick={() => handleFilterClick('Entregado')} className={`btn ${filter === 'Entregado' ? 'btn-success' : 'btn-secondary'}`}>Entregado</button>
             <button onClick={() => handleFilterClick('Cancelado')} className={`btn ${filter === 'Cancelado' ? 'btn-success' : 'btn-secondary'}`}>Cancelados</button>
             <button onClick={clearFilter} className="btn btn-secondary">Limpiar Filtro</button>
         </div>

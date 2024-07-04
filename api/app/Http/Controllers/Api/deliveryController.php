@@ -19,7 +19,7 @@ class deliveryController extends Controller
     public function index($kitchen, Order $orderModel)
     {
         $this->setup($kitchen);
-        return response()->json($orderModel->getOrderByStatus('1'));
+        return response()->json($orderModel->getOrderByStatus2('1,4'));
     }
     public function show(string $kitchen, string $id)
     {

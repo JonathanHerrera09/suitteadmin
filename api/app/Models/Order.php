@@ -31,4 +31,14 @@ class Order extends Model
             ->orderBy('orders.id', 'desc')
             ->first();;
     }
+    public function getOrderByStatus2(string $status)
+    {
+        $statusArray = explode(',', $status);
+        return $this->join('type_services', 'orders.typeService', '=', 'type_services.id')
+            ->join('status', 'orders.status', '=', 'status.id')
+            ->select('orders.*', 'type_services.name as type_service_name', 'status.name as status_name')
+            ->whereIn('orders.status', $statusArray)
+            ->orderBy('orders.id', 'desc')
+            ->get();
+    }
 }

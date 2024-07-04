@@ -26,6 +26,8 @@ import CategoryE from './components/category/edit/CategoryE.js';
 import Register from './components/register/Register.js';
 import ReportSale from './components/report/ReportSale.js';
 import ReportProducts from './components/report/ReportProduct.js';
+import IndexI from './components/index/IndexI.js';
+import Follow from './components/follow/Follow.js';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importa los estilos de Bootstrap
 import 'bootstrap';
 
@@ -41,6 +43,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/:kitchen/' element={ <ShowProduct/> } />
+          <Route path='/:kitchen/seguimiento' element={ <Follow/> } />
           <Route path='/:kitchen/create' element={ <CreateProduct/> } />
           <Route path='/:kitchen/edit/:id' element={ <EditProduct/> } />
           <Route path='/:kitchen/Kitchen' element={ <Kitchen/> } />
@@ -64,6 +67,8 @@ function App() {
           <Route path='/:kitchen/reportsp' element={ <ReportProducts/> } />
           <Route path='/Login' element={ <Login/> } />
           <Route path='/Register' element={ <Register/> } />
+          <Route path='' element={ <IndexI/> } />
+          
         </Routes>
       </BrowserRouter>
       

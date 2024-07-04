@@ -18,6 +18,7 @@ const Navbar = () => {
   };
   const navigate = useNavigate()
   const [isNavbarFixed, setIsNavbarFixed] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
@@ -44,6 +45,11 @@ const Navbar = () => {
       console.error('Error al cerrar sesión:', error);
     });
   }
+  const handleDropdownToggle = (e) => {
+        e.preventDefault();
+        setIsDropdownOpen(!isDropdownOpen);
+      };
+    
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -104,6 +110,17 @@ const Navbar = () => {
             <a href={`../../${kitchenLink}/banners`}>
               <i className="fas fa-image"></i> Banner cliente
             </a>
+          </div>
+          <div className="sidebarInter-footer">
+            <a onClick={handleDropdownToggle}>
+              <i className="fa fa-file-excel-o"></i> Reportes
+            </a>
+            {isDropdownOpen && (
+              <div className="dropdown-menu2">
+                <a href={`../../${kitchenLink}/reports`} className="dropdown-item2">Reporte de Ventas</a>
+                <a href={`../../${kitchenLink}/reportsp`} className="dropdown-item2">Reporte de Productos</a>
+              </div>
+            )}
           </div>
           <div className="sidebarInter-footer-logout">
             <a href="#"  onClick={logout}>

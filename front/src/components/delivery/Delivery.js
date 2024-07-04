@@ -5,10 +5,10 @@ import { socket } from '../../socket/socket';
 import {Modal, Button } from 'react-bootstrap';
 import {useLocation} from 'react-router-dom'
 import coinSound from '../../assets/audio/coin-sound.mp3';
-/* const endpoint = 'http://localhost:8000/api';
-const endpoint2 ='http://localhost:8000/assets/'; */
-const endpoint = 'https://admin.tumenuonline.com/api';
-const endpoint2 = 'https://admin.tumenuonline.com/assets/';
+const endpoint = 'http://localhost:8000/api';
+const endpoint2 ='http://localhost:8000/assets/';
+/* const endpoint = 'https://admin.tumenuonline.com/api';
+const endpoint2 = 'https://admin.tumenuonline.com/assets/'; */
 const audio = new Audio(coinSound);
 const Alert = ({ message, type, onClose }) => {
     useEffect(() => {
@@ -99,7 +99,7 @@ const Delivery = () => {
             }));
         });
         setOrders(ordersWithProducts)
-        const deliveryWithProducts = resp.data.filter(order => order.status === 1 && order.typeService !== '5');
+        const deliveryWithProducts = resp.data.filter(order => order.status === 4 && order.typeService !== '5');
         setDeliverys(deliveryWithProducts)
     };
     const calculateCompletion = (order) => {
@@ -137,8 +137,13 @@ const Delivery = () => {
                 ...credentials
             });
             const data = response.data;
+            
             if (data.type === 1) {
                 setAlert({ message: 'Se actualizo correctamente', type: 'success' });
+                response.data.status=5;
+                response.data.pgs=kitchenLink;
+                response.data.ids=[productId];
+                socket.emit('new-status', JSON.stringify(response.data));
                 getAllOrder();
             } else {
                 setAlert({ message: 'Aun hay productos sin estar preparados', type: 'danger' });
@@ -222,7 +227,6 @@ const Delivery = () => {
                 ))}
                 <h3> Domicilios</h3>
                 {deliverys.map((orderD, index) => (
-                    
                     <div key={`delivery-${orderD.id}-${index}`} className="col-md-4 mb-4" >
                             <div className={`card ${getCardColor(calculateCompletion(orderD))}`}>                        
                                 <div className="card-body">

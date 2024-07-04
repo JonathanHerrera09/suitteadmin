@@ -36,6 +36,10 @@ const Sale = () => {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [formErrors, setFormErrors] = useState({});
+    const [status, setStatus] = useState('Preparando');
+    const [orderSummary, setOrderSummary] = useState(null);
+    const [orderSummaryP, setOrderSummaryP] = useState(null);
+    const [orderId, setOrderId] = useState(null);
     const [comments, setComments] = useState('');
     const location = useLocation();
     const segment = location.pathname.split('/')[1];
@@ -67,7 +71,9 @@ const Sale = () => {
                     price: totalPrice,
                     product: selectedProducts
                 });
+		order.data.order.pg=kitchenLink;
                 socket.emit('create-new-order', JSON.stringify(order.data.order));
+		setOrderId(order.data.order.id);
                 if (order.data) {
                     const myModalElement = document.getElementById('checkmodal');
                     const myModal2 = Modal.getInstance(myModalElement);
@@ -179,8 +185,10 @@ const Sale = () => {
     const wht = () => {
         /* const pdfURL =` ${endpoint2}pdfs/1.pdf`;
         const mensaje = "¡Aquí está tu PDF! " + pdfURL; */
-        const whatsappURL = "https://api.whatsapp.com/send?phone=573126774392&text=Quetal%20%7Bempresa%7D%2C%20acabo%20de%20hacer%20mi%20pedido%2C%20es%20la%20orden%20%7Bnumero%7D";
-        window.open(whatsappURL);
+       /* const whatsappURL = "https://api.whatsapp.com/send?phone=573126774392&text=Quetal%20%7Bempresa%7D%2C%20acabo%20de%20hacer%20mi%20pedido%2C%20es%20la%20orden%20%7Bnumero%7D";
+	*/
+	const whatsappURL = `https://api.whatsapp.com/send?phone=57${config.phone}&text=Quetal%20%7B${config.company}%7D%2C%20acabo%20de%20hacer%20mi%20pedido%2C%20es%20la%20orden%20%7B${orderId}%7D`; 
+window.open(whatsappURL);
     }
     const openModal = () => {
         const myModal = new Modal(document.getElementById('checkmodal'));
@@ -384,12 +392,12 @@ const Sale = () => {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                Tu orden fue creada con exito ayudamos a agilizar tu pedido
+                                Tu orden fue creada con exito ayudamos a agilizar tu pedido  # {orderId}
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                <button type="button" className="btn btn-primary"  onClick={() => wht()}>Confirmación en WhastApp</button>
-                                <button type="button" className="btn btn-success"  onClick={() => wht()}>Seguir mi pedido</button>
+                                <button type="button" className="btn btn-success"  onClick={() => wht()}>Confirmación en WhastApp</button>
+{/*                                <button type="button" className="btn btn-success"  onClick={() => wht()}>Seguir mi pedido</button>*/}
                             </div>
                         </div>
                     </div>

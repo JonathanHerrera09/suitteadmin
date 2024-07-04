@@ -6,8 +6,10 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import './reportsale.css';
 
-const endpoint = 'http://localhost:8000/api';
-const endpoint2 = 'http://localhost:8000/assets/';
+/*const endpoint = 'http://localhost:8000/api';
+const endpoint2 = 'http://localhost:8000/assets/';*/
+const endpoint = 'https://admin.tumenuonline.com/api';
+const endpoint2 = 'https://admin.tumenuonline.com/assets/';
 /* const endpoint =process.env.REACT_APP_API_URL;
 const endpoint2 =process.env.REACT_APP_ASSETS_URL+''; */
 
